@@ -22,7 +22,6 @@ public class Home : MonoBehaviour, IDragHandler, IEndDragHandler
 
         foreach (Transform child in transform)
         {
-            // This iterates over all direct children, not the parent
 
             pages.Add(child);
         }
@@ -102,20 +101,16 @@ public class Home : MonoBehaviour, IDragHandler, IEndDragHandler
         {
             if (page.childCount == 0)
             {
-                // Deactivate the page if it doesn't have any children
                 page.gameObject.SetActive(false);
-                // Add the page to the list of pages to remove
                 pagesToRemove.Add(page);
             }
         }
 
-        // Remove the pages marked for removal from the original list
         foreach (Transform pageToRemove in pagesToRemove)
         {
             pages.Remove(pageToRemove);
         }
 
-        // Update the pageObjects array
         pageObjects = pages.ToArray();
     }
 }

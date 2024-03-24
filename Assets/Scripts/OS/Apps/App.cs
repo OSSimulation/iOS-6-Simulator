@@ -7,7 +7,7 @@ using TMPro;
 
 public class App : MonoBehaviour
 {
-    [SerializeField] private AppObject app;
+    public AppObject app;
 
     TOSSP6 os;
 
@@ -38,5 +38,17 @@ public class App : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(app.sceneName);
         os.isHomeScreen = false;
+
+        if (os.appSwitcherOpen)
+        {
+            os.CloseAppSwitcher();
+        }
+
+        os.HideHomeScreen();
+
+        if (!os.openApps.Contains(app))
+        {
+            os.openApps.Add(app);
+        }
     }
 }

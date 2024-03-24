@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class TOSSP6 : MonoBehaviour
 {
     //System
     [Header("System")]
+    [SerializeField] private GameObject screenHolder;
     public bool isSystemLocked;
     public int maxPasscodeTries;
 
@@ -18,8 +20,8 @@ public class TOSSP6 : MonoBehaviour
     [SerializeField] private StatusBar statusBar;
 
     //Home Button
+    [Space(10)]
     [Header("Home Button")]
-
     [SerializeField] private float doublePressTime = 0.25f;
     [SerializeField] private bool spacePressed = false;
     [SerializeField] private bool singlePress = false;
@@ -40,9 +42,11 @@ public class TOSSP6 : MonoBehaviour
     //App Switcher
     [Space(10)]
     [Header("App Switcher")]
-    public GameObject appSwitcher;
-    public bool appSwitcherOpen;
-    public string[] openApps;
+    [SerializeField] private GameObject appSwitcherButton;
+    [SerializeField] private GameObject appSwitcherHolder;
+    public bool appSwitcherOpen = false;
+    public List<AppObject> openApps = new List<AppObject>();
+    private List<Transform> appSwitcherPages = new List<Transform>();
 
     void Awake()
     {
@@ -58,12 +62,20 @@ public class TOSSP6 : MonoBehaviour
 
     void Start()
     {
-
+        foreach (Transform child in appSwitcherHolder.transform)
+        {
+            appSwitcherPages.Add(child.transform);
+        }
     }
 
     void Update()
     {
         HomeButton();
+
+        foreach (AppObject app in openApps)
+        {
+            InstantiateAppButton(app);
+        }
     }
 
     public void HomeButton()
@@ -77,13 +89,25 @@ public class TOSSP6 : MonoBehaviour
             }
             else
             {
-                spacePressed = false; // Reset for next press
-                singlePress = false; // Reset for next press
+                spacePressed = false;
+                singlePress = false;
                 StopCoroutine("CheckDoublePress");
                 Debug.Log("Space bar double pressed");
-                //OpenAppSwitcher();
+                OpenAppSwitcher();
             }
         }
+    }
+
+    public void OpenAppSwitcher()
+    {
+        screenHolder.GetComponent<Animator>().Play("Screen_Lift");
+        appSwitcherOpen = true;
+    }
+
+    public void CloseAppSwitcher()
+    {
+        screenHolder.GetComponent<Animator>().Play("Screen_Lower");
+        appSwitcherOpen = false;
     }
 
     IEnumerator CheckDoublePress()
@@ -103,11 +127,12 @@ public class TOSSP6 : MonoBehaviour
     {
         if (appSwitcherOpen)
         {
-            //CloseAppSwitcher();
+            CloseAppSwitcher();
         }
         else if (!isHomeScreen)
         {
             SceneManager.LoadScene(0);
+            ShowHomeScreen();
             isHomeScreen = true;
         }
         else if (isHomeScreen && homeScreen.currentPage != 1)
@@ -116,4 +141,38 @@ public class TOSSP6 : MonoBehaviour
         }
     }
 
+    public void ShowHomeScreen()
+    {
+        homeScreenGO.SetActive(true);
+    }
+
+    public void HideHomeScreen()
+    {
+        homeScreenGO.SetActive(false);
+    }
+
+    public void InstantiateAppButton(AppObject app)
+    {
+        if (!DoesButtonExistForApp(app))
+        {
+            GameObject newButton = Instantiate(appSwitcherButton, appSwitcherHolder.transform);
+
+            App newAppComponent = newButton.GetComponent<App>();
+
+            newAppComponent.app = app;
+        }
+    }
+
+    private bool DoesButtonExistForApp(AppObject app)
+    {
+        foreach (Transform child in appSwitcherHolder.transform)
+        {
+            App appComponent = child.GetComponent<App>();
+            if (appComponent != null && appComponent.app == app)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

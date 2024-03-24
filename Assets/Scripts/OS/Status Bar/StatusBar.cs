@@ -25,13 +25,11 @@ public class StatusBar : MonoBehaviour
     [Header("Battery")]
     [SerializeField] private TMP_Text batteryPercentLabel;
 
-    // Start is called before the first frame update
     void Start()
     {
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         SetTime();
@@ -60,7 +58,6 @@ public class StatusBar : MonoBehaviour
         }
         else if (!is12HourTime && !main.isLockScreen)
         {
-
             smallTimeLabel.text = time.ToString("HH:mm");
         }
         else if (main.isLockScreen && is12HourTime)
@@ -77,8 +74,6 @@ public class StatusBar : MonoBehaviour
     {
         System.DateTime theDate = System.DateTime.Now;
         date = System.DateTime.Now.ToString("dddd, d MMMM");
-
-
     }
 
     public void SetBatteryPercent()
