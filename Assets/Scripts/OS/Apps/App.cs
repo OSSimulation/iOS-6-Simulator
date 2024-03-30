@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -7,20 +5,18 @@ using TMPro;
 
 public class App : MonoBehaviour
 {
+    private TOSSP6 main;
+
     public AppObject app;
 
-    TOSSP6 os;
-
     Image image;
-
     Button button;
-
     TMP_Text appName;
 
     private void Awake()
     {
         GameObject OS = GameObject.FindGameObjectWithTag("TOSSP6");
-        os = OS.GetComponent<TOSSP6>();
+        main = OS.GetComponent<TOSSP6>();
     }
 
     private void Start()
@@ -32,23 +28,36 @@ public class App : MonoBehaviour
 
         appName = this.gameObject.GetComponentInChildren<TMP_Text>();
         appName.text = app.appName;
+
+        if (appName.text == "Calendar")
+        {
+            Instantiate(main.calendarDateText, this.transform);
+            Instantiate(main.calendarDayText, this.transform);
+        }
     }
 
     public void OpenApp()
     {
         SceneManager.LoadSceneAsync(app.sceneName);
-        os.isHomeScreen = false;
+        main.isHomeScreen = false;
 
-        if (os.appSwitcherOpen)
+        if (main.appSwitcherOpen)
         {
-            os.CloseAppSwitcher();
+            main.CloseAppSwitcher();
         }
 
-        os.HideHomeScreen();
+        main.HideHomeScreen();
 
-        if (!os.openApps.Contains(app))
+        if (!main.openApps.Contains(app))
         {
-            os.openApps.Add(app);
+            main.openApps.Add(app);
+        }
+        else if (main.openApps.Contains(app))
+        {
+            main.openApps.Remove(app);
+            main.openApps.Insert(0, app);
+
+            main.appSwitcherHolder.gameObject.transform.Find(app.name).SetAsFirstSibling();
         }
     }
 }

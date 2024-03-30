@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Home : MonoBehaviour, IDragHandler, IEndDragHandler
+public class PageTurner_Switcher : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     private Vector3 panelLocation;
-    [SerializeField] private float percentThreshold = 0.2f;
-    [SerializeField] private float easing = 0.5f;
+    [SerializeField] private float percentThreshold = 0.25f;
+    [SerializeField] private float easing = 0.25f;
     [SerializeField] private int totalPages;
     [SerializeField] private Transform[] pageObjects;
     private List<Transform> pages = new List<Transform>();
@@ -27,11 +27,6 @@ public class Home : MonoBehaviour, IDragHandler, IEndDragHandler
         }
 
         pageObjects = pages.ToArray();
-    }
-
-    private void Update()
-    {
-        DeactivateEmptyPages();
     }
 
     public void OnDrag(PointerEventData data)
@@ -91,26 +86,5 @@ public class Home : MonoBehaviour, IDragHandler, IEndDragHandler
         StartCoroutine(SmoothMove(transform.position, newLocation, easing));
         panelLocation = newLocation;
         currentPage = targetPage;
-    }
-
-    private void DeactivateEmptyPages()
-    {
-        List<Transform> pagesToRemove = new List<Transform>();
-
-        foreach (Transform page in pageObjects)
-        {
-            if (page.childCount == 0)
-            {
-                page.gameObject.SetActive(false);
-                pagesToRemove.Add(page);
-            }
-        }
-
-        foreach (Transform pageToRemove in pagesToRemove)
-        {
-            pages.Remove(pageToRemove);
-        }
-
-        pageObjects = pages.ToArray();
     }
 }

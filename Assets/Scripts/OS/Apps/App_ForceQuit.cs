@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class App_ForceQuit : MonoBehaviour
 {
@@ -16,9 +15,24 @@ public class App_ForceQuit : MonoBehaviour
         this.app = GetComponentInParent<App>();
     }
 
+    private void Start()
+    {
+        TOSSP6.AppOpened += MoveForceQuitButton;
+    }
+
     public void ForceQuitApp()
     {
+        if (SceneManager.GetActiveScene().name == app.app.sceneName)
+        {
+            os.GoHome();
+        }
+
         os.openApps.Remove(app.app);
         Destroy(this.transform.parent.gameObject);
+    }
+
+    private void MoveForceQuitButton()
+    {
+        this.gameObject.transform.SetAsLastSibling();
     }
 }

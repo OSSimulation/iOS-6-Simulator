@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -7,18 +5,20 @@ public class StatusBar : MonoBehaviour
 {
     [SerializeField] private TOSSP6 main;
 
-    //Bars
+    //Status Bars
     [Space(10)]
     [Header("Bars")]
     [SerializeField] private GameObject lockStatus;
-    [SerializeField] private GameObject mainStatus;
+    [SerializeField] private GameObject normalStatus;
 
     //Date & Time
     [Space(10)]
     [Header("Date & Time")]
     [SerializeField] private TMP_Text smallTimeLabel;
+    [SerializeField] private TMP_Text largeTimeLabel;
+    [SerializeField] private TMP_Text dateLabel;
     private string date;
-    public bool is12HourTime = true;
+    public bool is24HourTime = false;
 
     //Battery
     [Space(10)]
@@ -27,7 +27,7 @@ public class StatusBar : MonoBehaviour
 
     void Start()
     {
-
+        TOSSP6.DeviceUnlocked += SwitchBar;
     }
 
     void Update()
@@ -40,11 +40,11 @@ public class StatusBar : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("TimeFormat") == 1)
         {
-            is12HourTime = true;
+            is24HourTime = true;
         }
         else if (PlayerPrefs.GetInt("TimeFormat") == 0)
         {
-            is12HourTime = false;
+            is24HourTime = false;
         }
     }
 
@@ -52,21 +52,21 @@ public class StatusBar : MonoBehaviour
     {
         System.DateTime time = System.DateTime.Now;
 
-        if (is12HourTime && !main.isLockScreen)
+        if (!is24HourTime && !main.isLockScreen)
         {
             smallTimeLabel.text = time.ToString("h:mm tt");
         }
-        else if (!is12HourTime && !main.isLockScreen)
+        else if (is24HourTime && !main.isLockScreen)
         {
             smallTimeLabel.text = time.ToString("HH:mm");
         }
-        else if (main.isLockScreen && is12HourTime)
+        else if (main.isLockScreen && !is24HourTime)
         {
-            smallTimeLabel.text = time.ToString("h:mm");
+            largeTimeLabel.text = time.ToString("h:mm");
         }
-        else if (main.isLockScreen && !is12HourTime)
+        else if (main.isLockScreen && is24HourTime)
         {
-            smallTimeLabel.text = time.ToString("HH:mm");
+            largeTimeLabel.text = time.ToString("HH:mm");
         }
     }
 
@@ -74,6 +74,7 @@ public class StatusBar : MonoBehaviour
     {
         System.DateTime theDate = System.DateTime.Now;
         date = System.DateTime.Now.ToString("dddd, d MMMM");
+        dateLabel.text = date;
     }
 
     public void SetBatteryPercent()
@@ -81,8 +82,9 @@ public class StatusBar : MonoBehaviour
         batteryPercentLabel.text = SystemInfo.batteryLevel.ToString() + "%";
     }
 
-    public void SetChargeStatus()
+    private void SwitchBar()
     {
-
+        normalStatus.SetActive(true);
+        lockStatus.SetActive(false);
     }
 }
