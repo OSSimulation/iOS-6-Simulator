@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -9,11 +10,23 @@ public class TOSSP6 : MonoBehaviour
 {
     //System
     [Header("System")]
+    [SerializeField] private Settings settings;
     [SerializeField] private GameObject screenHolder;
+    public Transform screenCentreTransform;
     public static event Action DeviceUnlocked;
-    public static event Action AppOpened;
-    public bool isSystemLocked = true;
+    public static event Action LockDevice;
+    public float brightness;
+    public bool isSystemLocked;
+    public bool isDisplayOff;
+    public bool isInApp;
     public int maxPasscodeTries;
+
+    //Sound
+    [Space(10)]
+    [Header("Sound")]
+    [SerializeField] private SoundManager soundManager;
+    [SerializeField] private float volume;
+    public bool isSilentMode;
 
     //Status Bar
     [Space(10)]
@@ -25,31 +38,49 @@ public class TOSSP6 : MonoBehaviour
     [Header("Home Button")]
     [SerializeField] private float doublePressTime = 0.25f;
     [SerializeField] private bool spacePressed = false;
-    [SerializeField] private bool singlePress = false;
+    [SerializeField] private bool spaceSinglePress = false;
+
+    //Power Button
+    [Space(10)]
+    [Header("Power Button")]
+    [SerializeField] private bool powerPressed = false;
+    [SerializeField] private bool powerSinglePress = false;
 
     //Lock Screen
     [Space(10)]
     [Header("Lock Screen")]
+    [SerializeField] private LockScreen lockScreen;
+    public Image brightnessObject;
     public GameObject lockScreenGO;
     public bool isLockScreen = true;
 
     //Home Screen
     [Space(10)]
     [Header("Home Screen")]
-    public TMP_Text calendarDateText;
-    public TMP_Text calendarDayText;
     [SerializeField] private PageTurner_Home pageTurner;
     public GameObject homeScreenGO;
+    public TMP_Text calendarDateText;
+    public TMP_Text calendarDayText;
     public bool isHomeScreen = false;
+
+    //Dock
+    [Space(10)]
+    [Header("Dock")]
+    public GameObject dock;
 
     //App Switcher
     [Space(10)]
     [Header("App Switcher")]
+    [SerializeField] private PageTurner_Switcher switcher;
     [SerializeField] private GameObject appSwitcherButton;
     public GameObject appSwitcherHolder;
     public bool appSwitcherOpen = false;
     public List<AppObject> openApps = new List<AppObject>();
     private List<Transform> appSwitcherPages = new List<Transform>();
+
+    public Dictionary<string, GameObject> openAppHolder = new Dictionary<string, GameObject>();
+    public string currentOpenApp;
+
 
     void Awake()
     {
@@ -61,6 +92,8 @@ public class TOSSP6 : MonoBehaviour
         }
 
         DontDestroyOnLoad(this.gameObject);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void Start()
@@ -73,18 +106,17 @@ public class TOSSP6 : MonoBehaviour
         }
 
         Debug.Log(SystemInfo.operatingSystem);
+
+        HideHomeScreen();
     }
 
     void Update()
     {
+        SetSilentMode();
+        GetSFXVolume();
+
         HomeButton();
-
-        foreach (AppObject app in openApps)
-        {
-            InstantiateAppButton(app);
-
-            AppOpened?.Invoke();
-        }
+        PowerButton();
 
         GameObject[] dayObjects = GameObject.FindGameObjectsWithTag("DAY");
         foreach (GameObject dayObject in dayObjects)
@@ -96,14 +128,6 @@ public class TOSSP6 : MonoBehaviour
                 {
                     dayTextComponent.text = System.DateTime.Now.ToString("dddd");
                 }
-                else
-                {
-                    Debug.LogError("TMP_Text component not found on GameObject with tag 'DAY'");
-                }
-            }
-            else
-            {
-                Debug.LogError("GameObject with tag 'DAY' not found in the scene");
             }
         }
 
@@ -115,29 +139,138 @@ public class TOSSP6 : MonoBehaviour
                 TMP_Text dateTextComponent = dateObject.GetComponent<TMP_Text>();
                 if (dateTextComponent != null)
                 {
-                    dateTextComponent.text = System.DateTime.Now.ToString("dd");
-                }
-                else
-                {
-                    Debug.LogError("TMP_Text component not found on GameObject with tag 'DATE'");
+                    dateTextComponent.text = System.DateTime.Now.ToString("%d");
                 }
             }
-            else
+        }
+
+        foreach (AppObject app in openApps)
+        {
+            InstantiateAppButton(app);
+        }
+
+        if (openAppHolder.ContainsKey(currentOpenApp))
+        {
+            GameObject currentAppHolder = openAppHolder[currentOpenApp];
+
+            if (currentAppHolder != null)
             {
-                Debug.LogError("GameObject with tag 'DATE' not found in the scene");
+                currentAppHolder.transform.position = screenCentreTransform.transform.position;
+            }
+        }
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.buildIndex != 0)
+        {
+            GameObject[] sceneContentArray = GameObject.FindGameObjectsWithTag("Holder");
+
+            if (sceneContentArray.Length > 0)
+            {
+                foreach (GameObject sceneContent in sceneContentArray)
+                {
+                    openAppHolder.Add(scene.name, sceneContent);
+                }
             }
         }
     }
 
     private void UnlockSystem()
     {
-        isSystemLocked = false;
-        isLockScreen = false;
-        isHomeScreen = true;
+        this.GetComponent<Canvas>().sortingLayerName = "Main";
+        this.GetComponent<Canvas>().sortingOrder = 0;
 
-        screenHolder.GetComponent<Animator>().Play("Screen_Home_Zoom");
+        if (!isInApp)
+        {
+            isSystemLocked = false;
+            isLockScreen = false;
+            isHomeScreen = true;
 
+
+            dock.GetComponent<Animator>().Play("Dock_Show");
+        }
+        else if (isInApp)
+        {
+            isSystemLocked = false;
+            isLockScreen = false;
+            isHomeScreen = false;
+        }
+
+        soundManager.PlaySound(SoundEvents.SYSTEM_UNLOCK, volume, SoundSources.SYSTEM_SFX);
         DeviceUnlocked?.Invoke();
+    }
+
+    private void LockSystem()
+    {
+        if (!isSystemLocked && !isDisplayOff && isHomeScreen)
+        {
+            isSystemLocked = true;
+            isLockScreen = true;
+            isHomeScreen = false;
+            isDisplayOff = true;
+
+            soundManager.PlaySound(SoundEvents.SYSTEM_LOCK, volume, SoundSources.SYSTEM_SFX);
+
+            if (isHomeScreen)
+            {
+                dock.GetComponent<Animator>().Play("Dock_Hide");
+            }
+
+            LockDisplay();
+
+            if (appSwitcherOpen)
+            {
+                CloseAppSwitcher();
+            }
+        }
+        else if (isSystemLocked && isDisplayOff)
+        {
+            isLockScreen = true;
+            isHomeScreen = false;
+            isDisplayOff = false;
+            lockScreenGO.SetActive(true);
+
+            UnlockDisplay();
+        }
+        else if (isSystemLocked && !isDisplayOff)
+        {
+            isSystemLocked = true;
+            isLockScreen = true;
+            isHomeScreen = false;
+            isDisplayOff = true;
+
+            LockDisplay();
+        }
+        else if (isInApp)
+        {
+            isSystemLocked = true;
+            isLockScreen = true;
+            isHomeScreen = false;
+            isDisplayOff = true;
+
+            soundManager.PlaySound(SoundEvents.SYSTEM_LOCK, volume, SoundSources.SYSTEM_SFX);
+
+            LockDisplay();
+        }
+    }
+
+    private void LockDisplay()
+    {
+        this.GetComponent<Canvas>().sortingLayerName = "Main";
+        this.GetComponent<Canvas>().sortingOrder = 9999;
+        brightnessObject.gameObject.SetActive(true);
+        brightnessObject.GetComponent<Image>().raycastTarget = true;
+        LockDevice?.Invoke();
+        screenHolder.GetComponent<Animator>().Play("Empty");
+        statusBar.LockBar();
+        HideHomeScreen();
+    }
+
+    private void UnlockDisplay()
+    {
+        brightnessObject.gameObject.SetActive(false);
+        brightnessObject.GetComponent<Image>().raycastTarget = false;
     }
 
     public void HomeButton()
@@ -147,59 +280,106 @@ public class TOSSP6 : MonoBehaviour
             if (!spacePressed)
             {
                 spacePressed = true;
-                StartCoroutine(CheckDoublePress());
+                StartCoroutine(CheckHomeDoublePress());
             }
             else
             {
                 if (!isSystemLocked && !isLockScreen)
                 {
                     spacePressed = false;
-                    singlePress = false;
-                    StopCoroutine("CheckDoublePress");
+                    spaceSinglePress = false;
+                    StopCoroutine("CheckHomeDoublePress");
                     OpenAppSwitcher();
                 }
             }
         }
     }
 
-    IEnumerator CheckDoublePress()
+    IEnumerator CheckHomeDoublePress()
     {
-        singlePress = true;
+        spaceSinglePress = true;
         yield return new WaitForSeconds(doublePressTime);
-        if (singlePress)
+        if (spaceSinglePress)
         {
             spacePressed = false;
-            singlePress = false;
+            spaceSinglePress = false;
             GoHome();
+        }
+    }
+
+    public void PowerButton()
+    {
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            if (!powerPressed)
+            {
+                powerPressed = true;
+                StartCoroutine(CheckPowerDoublePress());
+            }
+            else
+            {
+                if (true)
+                {
+                    powerPressed = false;
+                    powerSinglePress = false;
+                    StopCoroutine("CheckDoublePowerPress");
+                    Debug.Log("Double Press");
+                }
+            }
+        }
+    }
+
+    IEnumerator CheckPowerDoublePress()
+    {
+        powerSinglePress = true;
+        yield return new WaitForSeconds(doublePressTime);
+        if (powerSinglePress)
+        {
+            powerPressed = false;
+            powerSinglePress = false;
+            LockSystem();
         }
     }
 
     public void GoHome()
     {
-        if (appSwitcherOpen)
+        if (!isSystemLocked)
         {
-            CloseAppSwitcher();
-        }
-        else if (!isHomeScreen)
-        {
-            SceneManager.LoadScene(0);
-            ShowHomeScreen();
-            isHomeScreen = true;
-        }
-        else if (isHomeScreen && pageTurner.currentPage != 1)
-        {
-            pageTurner.GoToPage(1);
+            if (appSwitcherOpen)
+            {
+                CloseAppSwitcher();
+            }
+            else if (!isHomeScreen)
+            {
+                HideCurrentApp(currentOpenApp);
+
+                ShowHomeScreen();
+                isHomeScreen = true;
+                isInApp = false;
+            }
+            else if (isHomeScreen && pageTurner.currentPage != 1)
+            {
+                pageTurner.GoToPage(1);
+            }
         }
     }
 
     public void ShowHomeScreen()
     {
-        homeScreenGO.SetActive(true);
+        pageTurner.PlayZoom();
+        dock.GetComponent<Animator>().Play("Dock_Show");
+        homeScreenGO.transform.localScale = new Vector3(1, 1, 1);
     }
 
     public void HideHomeScreen()
     {
-        homeScreenGO.SetActive(false);
+        homeScreenGO.transform.localScale = new Vector3(0, 0, 0);
+        screenHolder.GetComponent<Animator>().Play("Empty");
+        dock.GetComponent<Animator>().Play("Dock_Hide");
+        foreach (Transform transform in pageTurner.pageObjects)
+        {
+            transform.gameObject.GetComponent<Animator>().Play("Empty");
+        }
     }
 
     public void OpenAppSwitcher()
@@ -211,6 +391,7 @@ public class TOSSP6 : MonoBehaviour
     public void CloseAppSwitcher()
     {
         screenHolder.GetComponent<Animator>().Play("Screen_Lower");
+        switcher.GoToPage(3);
         appSwitcherOpen = false;
     }
 
@@ -239,5 +420,33 @@ public class TOSSP6 : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void HideCurrentApp(string currentSceneName)
+    {
+        if (openAppHolder.ContainsKey(currentSceneName))
+        {
+            GameObject currentAppHolder = openAppHolder[currentSceneName];
+
+            if (currentAppHolder != null)
+            {
+                currentAppHolder.SetActive(false);
+            }
+        }
+    }
+
+    private void SetSilentMode()
+    {
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            isSilentMode = !isSilentMode;
+            soundManager.PlaySound(SoundEvents.SYSTEM_RINGER_CHANGED, volume, SoundSources.SYSTEM_SFX);
+            settings.SetRinger(isSilentMode);
+        }
+    }
+
+    public float GetSFXVolume()
+    {
+        return volume = PlayerPrefs.GetFloat("System_Volume_SFX");
     }
 }

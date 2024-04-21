@@ -12,7 +12,7 @@ public class PageTurner_Switcher : MonoBehaviour, IDragHandler, IEndDragHandler
     [SerializeField] private int totalPages;
     [SerializeField] private Transform[] pageObjects;
     private List<Transform> pages = new List<Transform>();
-    public int currentPage = 1;
+    public int currentPage;
 
     private void Start()
     {
@@ -27,6 +27,8 @@ public class PageTurner_Switcher : MonoBehaviour, IDragHandler, IEndDragHandler
         }
 
         pageObjects = pages.ToArray();
+
+        currentPage = pageObjects.Length;
     }
 
     public void OnDrag(PointerEventData data)

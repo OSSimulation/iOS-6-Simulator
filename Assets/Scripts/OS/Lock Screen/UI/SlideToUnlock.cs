@@ -6,6 +6,11 @@ public class SlideToUnlock : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     public static event Action SliderMovedToEnd;
 
+    private void Start()
+    {
+        TOSSP6.LockDevice += ResetSlider;
+    }
+
     public void OnDrag(PointerEventData eventData)
     {
         Vector3 position = transform.localPosition;
@@ -23,5 +28,11 @@ public class SlideToUnlock : MonoBehaviour, IDragHandler, IEndDragHandler
         }
 
         SliderMovedToEnd?.Invoke();
+    }
+
+    private void ResetSlider()
+    {
+        Vector3 position = transform.localPosition;
+        transform.localPosition = new Vector3(-165, position.y, position.z);
     }
 }

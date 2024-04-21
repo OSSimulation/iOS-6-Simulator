@@ -9,6 +9,7 @@ public class LockScreen : MonoBehaviour
     private void Start()
     {
         TOSSP6.DeviceUnlocked += PlayOpenAnimation;
+        TOSSP6.LockDevice += ResetLockScreen;
 
         anim = GetComponent<Animator>();
     }
@@ -18,13 +19,21 @@ public class LockScreen : MonoBehaviour
         anim.Play("Lock_Screen_UI_Push");
     }
 
+    public void ResetLockScreen()
+    {
+        anim.Play("Lock_Screen_Reset");
+    }
+
     void HideLockScreenS1()
     {
-        main.lockScreenGO.SetActive(false);
+        //main.lockScreenGO.SetActive(false);
     }
 
     void HideLockScreenS2()
     {
-        main.ShowHomeScreen();
+        if (!main.isInApp)
+        {
+            main.ShowHomeScreen();
+        }
     }
 }

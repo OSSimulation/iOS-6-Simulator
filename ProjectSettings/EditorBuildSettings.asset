@@ -8,4 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Home Screen.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Default Apps/D_Clock.unity
+    guid: 2259477e6b24a4fee8b3486010e953c0
+  - enabled: 1
+    path: Assets/Scenes/Default Apps/D_Maps.unity
+    guid: fe552560189ba428d907d2eada7a4020
+  - enabled: 1
+    path: Assets/Scenes/Default Apps/D_Passbook.unity
+    guid: 791cbc1d86394441580e393f49e190f7
   m_configObjects: {}

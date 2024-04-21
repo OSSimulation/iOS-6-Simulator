@@ -5,16 +5,22 @@ using UnityEngine.EventSystems;
 
 public class PageTurner_Home : MonoBehaviour, IDragHandler, IEndDragHandler
 {
+    TOSSP6 main;
+
     private Vector3 panelLocation;
     [SerializeField] private float percentThreshold = 0.25f;
     [SerializeField] private float easing = 0.25f;
     [SerializeField] private int totalPages;
-    [SerializeField] private Transform[] pageObjects;
-    private List<Transform> pages = new List<Transform>();
+    public Transform[] pageObjects;
+    public List<Transform> pages = new List<Transform>();
     public int currentPage = 1;
 
     private void Start()
     {
+        TOSSP6.DeviceUnlocked += PlayZoom;
+
+        main = GetComponentInParent<TOSSP6>();
+
         panelLocation = transform.position;
 
         totalPages = this.transform.childCount;
@@ -111,5 +117,10 @@ public class PageTurner_Home : MonoBehaviour, IDragHandler, IEndDragHandler
         }
 
         pageObjects = pages.ToArray();
+    }
+
+    public void PlayZoom()
+    {
+        pages[currentPage - 1].gameObject.GetComponent<Animator>().Play("Page_Zoom_In");
     }
 }

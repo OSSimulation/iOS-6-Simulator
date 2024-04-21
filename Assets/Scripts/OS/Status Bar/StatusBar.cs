@@ -27,7 +27,7 @@ public class StatusBar : MonoBehaviour
 
     void Start()
     {
-        TOSSP6.DeviceUnlocked += SwitchBar;
+        TOSSP6.DeviceUnlocked += NormalBar;
     }
 
     void Update()
@@ -82,9 +82,15 @@ public class StatusBar : MonoBehaviour
         batteryPercentLabel.text = SystemInfo.batteryLevel.ToString() + "%";
     }
 
-    private void SwitchBar()
+    public void NormalBar()
     {
         normalStatus.SetActive(true);
         lockStatus.SetActive(false);
+    }
+
+    public void LockBar()
+    {
+        normalStatus.SetActive(false);
+        lockStatus.SetActive(true);
     }
 }

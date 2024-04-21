@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -5,6 +6,8 @@ using TMPro;
 
 public class App : MonoBehaviour
 {
+    public static event Action AppOpened;
+
     private TOSSP6 main;
 
     public AppObject app;
@@ -38,15 +41,31 @@ public class App : MonoBehaviour
 
     public void OpenApp()
     {
-        SceneManager.LoadSceneAsync(app.sceneName);
-        main.isHomeScreen = false;
-
-        if (main.appSwitcherOpen)
+        if (!SceneManager.GetSceneByName(this.app.sceneName).isLoaded)
         {
-            main.CloseAppSwitcher();
+            SceneManager.LoadScene(app.sceneName, LoadSceneMode.Additive);
         }
 
-        main.HideHomeScreen();
+        if (main.openAppHolder.ContainsKey(this.app.sceneName))
+        {
+            GameObject currentAppHolder = main.openAppHolder[this.app.sceneName];
+
+            if (currentAppHolder != null)
+            {
+                currentAppHolder.SetActive(true);
+            }
+        }
+
+        foreach (var entry in main.openAppHolder)
+        {
+            string sceneName = entry.Key;
+            GameObject appHolder = entry.Value;
+
+            if (appHolder != null && sceneName != this.app.sceneName)
+            {
+                appHolder.SetActive(false);
+            }
+        }
 
         if (!main.openApps.Contains(app))
         {
@@ -56,8 +75,20 @@ public class App : MonoBehaviour
         {
             main.openApps.Remove(app);
             main.openApps.Insert(0, app);
-
-            main.appSwitcherHolder.gameObject.transform.Find(app.name).SetAsFirstSibling();
+            main.appSwitcherHolder.transform.Find(app.name).SetAsFirstSibling();
         }
+
+        main.HideHomeScreen();
+
+        if (main.appSwitcherOpen)
+        {
+            main.CloseAppSwitcher();
+        }
+
+        main.currentOpenApp = this.app.sceneName;
+
+        main.isInApp = true;
+        main.isHomeScreen = false;
+        AppOpened?.Invoke();
     }
 }

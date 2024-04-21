@@ -17,18 +17,20 @@ public class App_ForceQuit : MonoBehaviour
 
     private void Start()
     {
-        TOSSP6.AppOpened += MoveForceQuitButton;
+        App.AppOpened += MoveForceQuitButton;
     }
 
     public void ForceQuitApp()
     {
-        if (SceneManager.GetActiveScene().name == app.app.sceneName)
+        if (SceneManager.GetActiveScene().name == this.app.app.sceneName)
         {
             os.GoHome();
         }
 
         os.openApps.Remove(app.app);
+        os.openAppHolder.Remove(app.app.sceneName);
         Destroy(this.transform.parent.gameObject);
+        SceneManager.UnloadSceneAsync(this.app.app.sceneName);
     }
 
     private void MoveForceQuitButton()
