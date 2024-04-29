@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,16 +49,14 @@ public class PageTurner_Switcher : MonoBehaviour, IDragHandler, IEndDragHandler
             {
                 currentPage++;
                 newLocation += new Vector3(-Screen.width, 0, 0);
-            }
-            else if (percentage < 0 && currentPage > 1)
+            } else if (percentage < 0 && currentPage > 1)
             {
                 currentPage--;
                 newLocation += new Vector3(Screen.width, 0, 0);
             }
             StartCoroutine(SmoothMove(transform.position, newLocation, easing));
             panelLocation = newLocation;
-        }
-        else
+        } else
         {
             StartCoroutine(SmoothMove(transform.position, panelLocation, easing));
         }

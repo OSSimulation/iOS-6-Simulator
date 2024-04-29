@@ -1,8 +1,8 @@
 using System;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class App : MonoBehaviour
 {
@@ -70,8 +70,7 @@ public class App : MonoBehaviour
         if (!main.openApps.Contains(app))
         {
             main.openApps.Add(app);
-        }
-        else if (main.openApps.Contains(app))
+        } else if (main.openApps.Contains(app))
         {
             main.openApps.Remove(app);
             main.openApps.Insert(0, app);
@@ -82,7 +81,7 @@ public class App : MonoBehaviour
 
         if (main.appSwitcherOpen)
         {
-            main.CloseAppSwitcher();
+            StartCoroutine(main.CloseAppSwitcher());
         }
 
         main.currentOpenApp = this.app.sceneName;

@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Button_MultiImage : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -21,8 +21,7 @@ public class Button_MultiImage : MonoBehaviour, IPointerDownHandler, IPointerUpH
         if (toggle.isOn)
         {
             image.sprite = buttonImages[1];
-        }
-        else
+        } else
         {
             image.sprite = buttonImages[3];
         }
@@ -33,8 +32,7 @@ public class Button_MultiImage : MonoBehaviour, IPointerDownHandler, IPointerUpH
         if (toggle.isOn)
         {
             image.sprite = buttonImages[0];
-        }
-        else
+        } else
         {
             image.sprite = buttonImages[2];
         }

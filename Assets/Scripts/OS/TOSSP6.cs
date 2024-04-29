@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class TOSSP6 : MonoBehaviour
 {
@@ -12,6 +12,7 @@ public class TOSSP6 : MonoBehaviour
     [Header("System")]
     [SerializeField] private Settings settings;
     [SerializeField] private GameObject screenHolder;
+    [SerializeField] private UI_NotificationCentre notificationCentre;
     public Transform screenCentreTransform;
     public static event Action DeviceUnlocked;
     public static event Action LockDevice;
@@ -19,6 +20,7 @@ public class TOSSP6 : MonoBehaviour
     public bool isSystemLocked;
     public bool isDisplayOff;
     public bool isInApp;
+    public bool isInNotificationCentre;
     public int maxPasscodeTries;
 
     //Sound
@@ -189,8 +191,7 @@ public class TOSSP6 : MonoBehaviour
 
 
             dock.GetComponent<Animator>().Play("Dock_Show");
-        }
-        else if (isInApp)
+        } else if (isInApp)
         {
             isSystemLocked = false;
             isLockScreen = false;
@@ -217,14 +218,18 @@ public class TOSSP6 : MonoBehaviour
                 dock.GetComponent<Animator>().Play("Dock_Hide");
             }
 
-            LockDisplay();
+            if (isInNotificationCentre)
+            {
+                HideNotificationCentre();
+            }
 
             if (appSwitcherOpen)
             {
-                CloseAppSwitcher();
+                StartCoroutine(CloseAppSwitcher());
             }
-        }
-        else if (isSystemLocked && isDisplayOff)
+
+            LockDisplay();
+        } else if (isSystemLocked && isDisplayOff)
         {
             isLockScreen = true;
             isHomeScreen = false;
@@ -232,8 +237,7 @@ public class TOSSP6 : MonoBehaviour
             lockScreenGO.SetActive(true);
 
             UnlockDisplay();
-        }
-        else if (isSystemLocked && !isDisplayOff)
+        } else if (isSystemLocked && !isDisplayOff)
         {
             isSystemLocked = true;
             isLockScreen = true;
@@ -241,8 +245,7 @@ public class TOSSP6 : MonoBehaviour
             isDisplayOff = true;
 
             LockDisplay();
-        }
-        else if (isInApp)
+        } else if (isInApp)
         {
             isSystemLocked = true;
             isLockScreen = true;
@@ -281,8 +284,7 @@ public class TOSSP6 : MonoBehaviour
             {
                 spacePressed = true;
                 StartCoroutine(CheckHomeDoublePress());
-            }
-            else
+            } else
             {
                 if (!isSystemLocked && !isLockScreen)
                 {
@@ -315,8 +317,7 @@ public class TOSSP6 : MonoBehaviour
             {
                 powerPressed = true;
                 StartCoroutine(CheckPowerDoublePress());
-            }
-            else
+            } else
             {
                 if (true)
                 {
@@ -347,17 +348,20 @@ public class TOSSP6 : MonoBehaviour
         {
             if (appSwitcherOpen)
             {
-                CloseAppSwitcher();
+                StartCoroutine(CloseAppSwitcher());
+            } else if (isInNotificationCentre)
+            {
+                HideNotificationCentre();
             }
-            else if (!isHomeScreen)
+
+            if (!isHomeScreen)
             {
                 HideCurrentApp(currentOpenApp);
 
                 ShowHomeScreen();
                 isHomeScreen = true;
                 isInApp = false;
-            }
-            else if (isHomeScreen && pageTurner.currentPage != 1)
+            } else if (isHomeScreen && pageTurner.currentPage != 1)
             {
                 pageTurner.GoToPage(1);
             }
@@ -382,15 +386,22 @@ public class TOSSP6 : MonoBehaviour
         }
     }
 
+    public void HideNotificationCentre()
+    {
+        notificationCentre.GoToPage(1);
+        isInNotificationCentre = false;
+    }
+
     public void OpenAppSwitcher()
     {
         screenHolder.GetComponent<Animator>().Play("Screen_Lift");
         appSwitcherOpen = true;
     }
 
-    public void CloseAppSwitcher()
+    public IEnumerator CloseAppSwitcher()
     {
         screenHolder.GetComponent<Animator>().Play("Screen_Lower");
+        yield return new WaitForSeconds(0.5f);
         switcher.GoToPage(3);
         appSwitcherOpen = false;
     }
@@ -450,3 +461,4 @@ public class TOSSP6 : MonoBehaviour
         return volume = PlayerPrefs.GetFloat("System_Volume_SFX");
     }
 }
+
