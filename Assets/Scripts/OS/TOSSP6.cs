@@ -83,7 +83,6 @@ public class TOSSP6 : MonoBehaviour
     public Dictionary<string, GameObject> openAppHolder = new Dictionary<string, GameObject>();
     public string currentOpenApp;
 
-
     void Awake()
     {
         GameObject[] objs = GameObject.FindGameObjectsWithTag("TOSSP6");
@@ -101,6 +100,7 @@ public class TOSSP6 : MonoBehaviour
     void Start()
     {
         SlideToUnlock.SliderMovedToEnd += UnlockSystem;
+        App.AppOpened += ShowCurrentApp;
 
         foreach (Transform child in appSwitcherHolder.transform)
         {
@@ -110,6 +110,7 @@ public class TOSSP6 : MonoBehaviour
         Debug.Log(SystemInfo.operatingSystem);
 
         HideHomeScreen();
+        homeScreenGO.transform.localScale = new Vector3(0, 0, 0);
     }
 
     void Update()
@@ -191,11 +192,14 @@ public class TOSSP6 : MonoBehaviour
 
 
             dock.GetComponent<Animator>().Play("Dock_Show");
-        } else if (isInApp)
+        }
+        else if (isInApp)
         {
             isSystemLocked = false;
             isLockScreen = false;
             isHomeScreen = false;
+
+            ShowCurrentApp();
         }
 
         soundManager.PlaySound(SoundEvents.SYSTEM_UNLOCK, volume, SoundSources.SYSTEM_SFX);
@@ -229,7 +233,8 @@ public class TOSSP6 : MonoBehaviour
             }
 
             LockDisplay();
-        } else if (isSystemLocked && isDisplayOff)
+        }
+        else if (isSystemLocked && isDisplayOff)
         {
             isLockScreen = true;
             isHomeScreen = false;
@@ -237,7 +242,8 @@ public class TOSSP6 : MonoBehaviour
             lockScreenGO.SetActive(true);
 
             UnlockDisplay();
-        } else if (isSystemLocked && !isDisplayOff)
+        }
+        else if (isSystemLocked && !isDisplayOff)
         {
             isSystemLocked = true;
             isLockScreen = true;
@@ -245,7 +251,8 @@ public class TOSSP6 : MonoBehaviour
             isDisplayOff = true;
 
             LockDisplay();
-        } else if (isInApp)
+        }
+        else if (isInApp)
         {
             isSystemLocked = true;
             isLockScreen = true;
@@ -268,12 +275,17 @@ public class TOSSP6 : MonoBehaviour
         screenHolder.GetComponent<Animator>().Play("Empty");
         statusBar.LockBar();
         HideHomeScreen();
+        HideCurrentApp(currentOpenApp);
+        homeScreenGO.transform.localScale = new Vector3(0, 0, 0);
     }
 
     private void UnlockDisplay()
     {
         brightnessObject.gameObject.SetActive(false);
         brightnessObject.GetComponent<Image>().raycastTarget = false;
+
+        this.GetComponent<Canvas>().sortingLayerName = "Main";
+        this.GetComponent<Canvas>().sortingOrder = 499;
     }
 
     public void HomeButton()
@@ -284,7 +296,8 @@ public class TOSSP6 : MonoBehaviour
             {
                 spacePressed = true;
                 StartCoroutine(CheckHomeDoublePress());
-            } else
+            }
+            else
             {
                 if (!isSystemLocked && !isLockScreen)
                 {
@@ -317,7 +330,8 @@ public class TOSSP6 : MonoBehaviour
             {
                 powerPressed = true;
                 StartCoroutine(CheckPowerDoublePress());
-            } else
+            }
+            else
             {
                 if (true)
                 {
@@ -349,19 +363,20 @@ public class TOSSP6 : MonoBehaviour
             if (appSwitcherOpen)
             {
                 StartCoroutine(CloseAppSwitcher());
-            } else if (isInNotificationCentre)
+            }
+            else if (isInNotificationCentre)
             {
                 HideNotificationCentre();
             }
-
-            if (!isHomeScreen)
+            else if (!isHomeScreen)
             {
                 HideCurrentApp(currentOpenApp);
 
                 ShowHomeScreen();
                 isHomeScreen = true;
                 isInApp = false;
-            } else if (isHomeScreen && pageTurner.currentPage != 1)
+            }
+            else if (isHomeScreen && pageTurner.currentPage != 1)
             {
                 pageTurner.GoToPage(1);
             }
@@ -370,20 +385,20 @@ public class TOSSP6 : MonoBehaviour
 
     public void ShowHomeScreen()
     {
-        pageTurner.PlayZoom();
+        foreach (Transform transform in pageTurner.pageObjects)
+        {
+            transform.gameObject.SetActive(true);
+        }
+
+        pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Animator>().Play("Page_Zoom_In");
         dock.GetComponent<Animator>().Play("Dock_Show");
         homeScreenGO.transform.localScale = new Vector3(1, 1, 1);
     }
 
     public void HideHomeScreen()
     {
-        homeScreenGO.transform.localScale = new Vector3(0, 0, 0);
         screenHolder.GetComponent<Animator>().Play("Empty");
         dock.GetComponent<Animator>().Play("Dock_Hide");
-        foreach (Transform transform in pageTurner.pageObjects)
-        {
-            transform.gameObject.GetComponent<Animator>().Play("Empty");
-        }
     }
 
     public void HideNotificationCentre()
@@ -441,7 +456,24 @@ public class TOSSP6 : MonoBehaviour
 
             if (currentAppHolder != null)
             {
-                currentAppHolder.SetActive(false);
+                //currentAppHolder.SetActive(false);
+                currentAppHolder.GetComponent<Animator>().Play("App_Zoom_Out");
+            }
+        }
+    }
+
+    public void ShowCurrentApp()
+    {
+        string currentSceneName = currentOpenApp;
+
+        if (openAppHolder.ContainsKey(currentSceneName))
+        {
+            GameObject currentAppHolder = openAppHolder[currentSceneName];
+
+            if (currentAppHolder != null)
+            {
+                //currentAppHolder.SetActive(false);
+                currentAppHolder.GetComponent<Animator>().Play("App_Zoom_In");
             }
         }
     }

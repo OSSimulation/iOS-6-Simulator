@@ -49,7 +49,8 @@ public class Slider_Increment : MonoBehaviour
                 IncrementSlider();
             else
                 DecrementSlider();
-        } else if (Input.GetKeyUp(keyCode))
+        }
+        else if (Input.GetKeyUp(keyCode))
         {
             actionFlag = false;
             isHoldingKey = false;

@@ -42,7 +42,8 @@ public class StatusBar : MonoBehaviour
         if (PlayerPrefs.GetInt("TimeFormat") == 1)
         {
             is24HourTime = true;
-        } else if (PlayerPrefs.GetInt("TimeFormat") == 0)
+        }
+        else if (PlayerPrefs.GetInt("TimeFormat") == 0)
         {
             is24HourTime = false;
         }
@@ -55,13 +56,16 @@ public class StatusBar : MonoBehaviour
         if (!is24HourTime && !main.isLockScreen)
         {
             smallTimeLabel.text = time.ToString("h:mm tt");
-        } else if (is24HourTime && !main.isLockScreen)
+        }
+        else if (is24HourTime && !main.isLockScreen)
         {
             smallTimeLabel.text = time.ToString("HH:mm");
-        } else if (main.isLockScreen && !is24HourTime)
+        }
+        else if (main.isLockScreen && !is24HourTime)
         {
             largeTimeLabel.text = time.ToString("h:mm");
-        } else if (main.isLockScreen && is24HourTime)
+        }
+        else if (main.isLockScreen && is24HourTime)
         {
             largeTimeLabel.text = time.ToString("HH:mm");
         }

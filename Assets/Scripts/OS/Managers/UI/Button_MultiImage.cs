@@ -21,7 +21,8 @@ public class Button_MultiImage : MonoBehaviour, IPointerDownHandler, IPointerUpH
         if (toggle.isOn)
         {
             image.sprite = buttonImages[1];
-        } else
+        }
+        else
         {
             image.sprite = buttonImages[3];
         }
@@ -32,7 +33,8 @@ public class Button_MultiImage : MonoBehaviour, IPointerDownHandler, IPointerUpH
         if (toggle.isOn)
         {
             image.sprite = buttonImages[0];
-        } else
+        }
+        else
         {
             image.sprite = buttonImages[2];
         }

@@ -39,7 +39,8 @@ public class UI_NotificationCentre : MonoBehaviour, IDragHandler, IEndDragHandle
             {
                 data.pointerDrag = null;
                 GoToPage(2);
-            } else if (notificationCentreObject.transform.position.y > screenTop.position.y + Screen.height / 2 && currentPage != 1)
+            }
+            else if (notificationCentreObject.transform.position.y > screenTop.position.y + Screen.height / 2 && currentPage != 1)
             {
                 data.pointerDrag = null;
                 GoToPage(1);
@@ -59,14 +60,16 @@ public class UI_NotificationCentre : MonoBehaviour, IDragHandler, IEndDragHandle
                 {
                     currentPage++;
                     newLocation += new Vector3(0, -Screen.height, 0);
-                } else if (percentage < 0 && currentPage > 1)
+                }
+                else if (percentage < 0 && currentPage > 1)
                 {
                     currentPage--;
                     newLocation += new Vector3(0, Screen.height, 0);
                 }
                 StartCoroutine(SmoothMove(transform.position, newLocation, easing));
                 panelLocation = newLocation;
-            } else
+            }
+            else
             {
                 StartCoroutine(SmoothMove(transform.position, panelLocation, easing));
             }
@@ -91,7 +94,8 @@ public class UI_NotificationCentre : MonoBehaviour, IDragHandler, IEndDragHandle
         if (currentPage == 2)
         {
             main.isInNotificationCentre = true;
-        } else if (currentPage == 1)
+        }
+        else if (currentPage == 1)
         {
             main.isInNotificationCentre = false;
         }

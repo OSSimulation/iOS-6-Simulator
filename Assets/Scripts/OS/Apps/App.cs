@@ -70,7 +70,8 @@ public class App : MonoBehaviour
         if (!main.openApps.Contains(app))
         {
             main.openApps.Add(app);
-        } else if (main.openApps.Contains(app))
+        }
+        else if (main.openApps.Contains(app))
         {
             main.openApps.Remove(app);
             main.openApps.Insert(0, app);
@@ -78,6 +79,7 @@ public class App : MonoBehaviour
         }
 
         main.HideHomeScreen();
+        AppOpened?.Invoke();
 
         if (main.appSwitcherOpen)
         {
@@ -88,6 +90,5 @@ public class App : MonoBehaviour
 
         main.isInApp = true;
         main.isHomeScreen = false;
-        AppOpened?.Invoke();
     }
 }
