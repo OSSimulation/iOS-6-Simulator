@@ -26,7 +26,7 @@ public class TOSSP6 : MonoBehaviour
     //Sound
     [Space(10)]
     [Header("Sound")]
-    [SerializeField] private SoundManager soundManager;
+    public SoundManager soundManager;
     [SerializeField] private float volume;
     public bool isSilentMode;
 
@@ -333,13 +333,10 @@ public class TOSSP6 : MonoBehaviour
             }
             else
             {
-                if (true)
-                {
-                    powerPressed = false;
-                    powerSinglePress = false;
-                    StopCoroutine("CheckDoublePowerPress");
-                    Debug.Log("Double Press");
-                }
+                powerPressed = false;
+                powerSinglePress = false;
+                StopCoroutine("CheckDoublePowerPress");
+                Debug.Log("Double Press");
             }
         }
     }
@@ -397,6 +394,7 @@ public class TOSSP6 : MonoBehaviour
 
     public void HideHomeScreen()
     {
+        pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Animator>().Play("Empty");
         screenHolder.GetComponent<Animator>().Play("Empty");
         dock.GetComponent<Animator>().Play("Dock_Hide");
     }
@@ -405,6 +403,7 @@ public class TOSSP6 : MonoBehaviour
     {
         notificationCentre.GoToPage(1);
         isInNotificationCentre = false;
+        notificationCentre.InvokeHideNotificationCentre();
     }
 
     public void OpenAppSwitcher()

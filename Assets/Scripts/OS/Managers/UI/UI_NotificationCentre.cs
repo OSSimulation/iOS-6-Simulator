@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,11 +11,15 @@ public class UI_NotificationCentre : MonoBehaviour, IDragHandler, IEndDragHandle
     [SerializeField] private Transform screenTop;
     [SerializeField] private Transform screenBottom;
     [SerializeField] private GameObject notificationCentreObject;
+    [SerializeField] private GameObject statusBarDragger;
     [SerializeField] private float percentThreshold = 0.25f;
     [SerializeField] private float easing = 0.25f;
     [SerializeField] private int totalPages;
     public Transform[] pageObjects;
     public int currentPage = 1;
+
+    public static event Action ShowNotificationCentre;
+    public static event Action HideNotificationCentre;
 
     private void Start()
     {
@@ -29,6 +34,8 @@ public class UI_NotificationCentre : MonoBehaviour, IDragHandler, IEndDragHandle
     {
         if (!main.isSystemLocked)
         {
+            HideNotificationCentre?.Invoke();
+
             if (pageObjects.Length > 1)
             {
                 float difference = data.pressPosition.y - data.position.y;
@@ -39,11 +46,13 @@ public class UI_NotificationCentre : MonoBehaviour, IDragHandler, IEndDragHandle
             {
                 data.pointerDrag = null;
                 GoToPage(2);
+                ShowNotificationCentre?.Invoke();
             }
-            else if (notificationCentreObject.transform.position.y > screenTop.position.y + Screen.height / 2 && currentPage != 1)
+            else if (notificationCentreObject.transform.position.y > screenTop.position.y + Screen.height / 2 && currentPage != 1 || statusBarDragger.transform.position.y > screenTop.position.y)
             {
                 data.pointerDrag = null;
                 GoToPage(1);
+                HideNotificationCentre?.Invoke();
             }
         }
     }
@@ -60,11 +69,13 @@ public class UI_NotificationCentre : MonoBehaviour, IDragHandler, IEndDragHandle
                 {
                     currentPage++;
                     newLocation += new Vector3(0, -Screen.height, 0);
+                    ShowNotificationCentre?.Invoke();
                 }
                 else if (percentage < 0 && currentPage > 1)
                 {
                     currentPage--;
                     newLocation += new Vector3(0, Screen.height, 0);
+                    HideNotificationCentre?.Invoke();
                 }
                 StartCoroutine(SmoothMove(transform.position, newLocation, easing));
                 panelLocation = newLocation;
@@ -94,10 +105,12 @@ public class UI_NotificationCentre : MonoBehaviour, IDragHandler, IEndDragHandle
         if (currentPage == 2)
         {
             main.isInNotificationCentre = true;
+            ShowNotificationCentre?.Invoke();
         }
         else if (currentPage == 1)
         {
             main.isInNotificationCentre = false;
+            HideNotificationCentre?.Invoke();
         }
     }
 
@@ -108,5 +121,10 @@ public class UI_NotificationCentre : MonoBehaviour, IDragHandler, IEndDragHandle
         StartCoroutine(SmoothMove(transform.position, newLocation, easing));
         panelLocation = newLocation;
         currentPage = targetPage;
+    }
+
+    public void InvokeHideNotificationCentre()
+    {
+        HideNotificationCentre?.Invoke();
     }
 }

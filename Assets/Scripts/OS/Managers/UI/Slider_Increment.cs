@@ -59,14 +59,20 @@ public class Slider_Increment : MonoBehaviour
 
     void IncrementSlider()
     {
-        currentValue += incrementAmount;
-        UpdateSliderValue();
+        if (currentValue < 1)
+        {
+            currentValue += incrementAmount;
+            UpdateSliderValue();
+        }
     }
 
     void DecrementSlider()
     {
-        currentValue -= incrementAmount;
-        UpdateSliderValue();
+        if (currentValue > 0)
+        {
+            currentValue -= incrementAmount;
+            UpdateSliderValue();
+        }
     }
 
     void OnSliderValueChanged(float newValue)
