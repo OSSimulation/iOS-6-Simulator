@@ -99,6 +99,7 @@ public class TOSSP6 : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
         SlideToUnlock.SliderMovedToEnd += UnlockSystem;
         App.AppOpened += ShowCurrentApp;
 
