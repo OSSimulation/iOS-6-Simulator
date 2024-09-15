@@ -27,6 +27,8 @@ public class App_ForceQuit : MonoBehaviour
             os.GoHome();
         }
 
+        App.AppOpened -= MoveForceQuitButton;
+
         os.openApps.Remove(app.app);
         os.openAppHolder.Remove(app.app.sceneName);
         Destroy(this.transform.parent.gameObject);

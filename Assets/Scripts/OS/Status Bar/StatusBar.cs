@@ -109,6 +109,7 @@ public class StatusBar : MonoBehaviour
         {
             batteryCharging.SetActive(true);
             batteryNormal.SetActive(false);
+            main.isSystemCharging = true;
 
             if (!hasChargingSoundPlayed)
             {
@@ -120,6 +121,8 @@ public class StatusBar : MonoBehaviour
         {
             batteryCharging.SetActive(false);
             batteryNormal.SetActive(true);
+
+            main.isSystemCharging = false;
 
             hasChargingSoundPlayed = false;
         }

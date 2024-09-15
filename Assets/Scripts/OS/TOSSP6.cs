@@ -22,6 +22,7 @@ public class TOSSP6 : MonoBehaviour
     public bool isInApp;
     public bool isInNotificationCentre;
     public int maxPasscodeTries;
+    public bool isSystemCharging;
 
     //Sound
     [Space(10)]
@@ -52,9 +53,12 @@ public class TOSSP6 : MonoBehaviour
     [Space(10)]
     [Header("Lock Screen")]
     [SerializeField] private LockScreen lockScreen;
+    [SerializeField] private GameObject defaultLock;
+    [SerializeField] private GameObject mediaCentre;
     public Image brightnessObject;
     public GameObject lockScreenGO;
     public bool isLockScreen = true;
+    private bool isMediaControlCentre;
 
     //Home Screen
     [Space(10)]
@@ -75,6 +79,7 @@ public class TOSSP6 : MonoBehaviour
     [Header("App Switcher")]
     [SerializeField] private PageTurner_Switcher switcher;
     [SerializeField] private GameObject appSwitcherButton;
+    [SerializeField] private GameObject closeButton;
     public GameObject appSwitcherHolder;
     public bool appSwitcherOpen = false;
     public List<AppObject> openApps = new List<AppObject>();
@@ -112,6 +117,10 @@ public class TOSSP6 : MonoBehaviour
 
         HideHomeScreen();
         homeScreenGO.transform.localScale = new Vector3(0, 0, 0);
+
+        CloseLockMediaCentre();
+
+        closeButton.SetActive(false);
     }
 
     void Update()
@@ -223,6 +232,11 @@ public class TOSSP6 : MonoBehaviour
                 dock.GetComponent<Animator>().Play("Dock_Hide");
             }
 
+            if (isMediaControlCentre)
+            {
+                CloseLockMediaCentre();
+            }
+
             if (isInNotificationCentre)
             {
                 HideNotificationCentre();
@@ -306,6 +320,16 @@ public class TOSSP6 : MonoBehaviour
                     spaceSinglePress = false;
                     StopCoroutine("CheckHomeDoublePress");
                     OpenAppSwitcher();
+                    return;
+                }
+
+                if (isLockScreen && isSystemLocked && !isMediaControlCentre)
+                {
+                    OpenLockMediaCentre();
+                }
+                else if (isMediaControlCentre)
+                {
+                    CloseLockMediaCentre();
                 }
             }
         }
@@ -336,7 +360,7 @@ public class TOSSP6 : MonoBehaviour
             {
                 powerPressed = false;
                 powerSinglePress = false;
-                StopCoroutine("CheckDoublePowerPress");
+                StopCoroutine("CheckPowerDoublePress");
                 Debug.Log("Double Press");
             }
         }
@@ -410,15 +434,40 @@ public class TOSSP6 : MonoBehaviour
     public void OpenAppSwitcher()
     {
         screenHolder.GetComponent<Animator>().Play("Screen_Lift");
+        closeButton.SetActive(true);
         appSwitcherOpen = true;
+    }
+
+    public void CloseAppSwitcherTrigger()
+    {
+        StartCoroutine(CloseAppSwitcher());
     }
 
     public IEnumerator CloseAppSwitcher()
     {
         screenHolder.GetComponent<Animator>().Play("Screen_Lower");
+        closeButton.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         switcher.GoToPage(3);
         appSwitcherOpen = false;
+    }
+
+    private void OpenLockMediaCentre()
+    {
+        isMediaControlCentre = true;
+        statusBar.NormalBar();
+
+        mediaCentre.SetActive(true);
+        defaultLock.SetActive(false);
+    }
+
+    private void CloseLockMediaCentre()
+    {
+        isMediaControlCentre = false;
+        statusBar.LockBar();
+
+        mediaCentre.SetActive(false);
+        defaultLock.SetActive(true);
     }
 
     public void InstantiateAppButton(AppObject app)

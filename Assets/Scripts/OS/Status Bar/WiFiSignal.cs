@@ -1,6 +1,6 @@
-using UnityEngine;
 using System.Runtime.InteropServices;
 using Unity.VectorGraphics;
+using UnityEngine;
 
 public class WiFiSignal : MonoBehaviour
 {
@@ -8,6 +8,8 @@ public class WiFiSignal : MonoBehaviour
     [SerializeField] private GameObject wifiIconGO;
 
     private SVGImage wifiIcon;
+
+    [SerializeField] bool debugMode;
 
     [DllImport("WiFiRSSIReader")]
     private static extern int GetCurrentRSSI();
@@ -28,13 +30,23 @@ public class WiFiSignal : MonoBehaviour
         {
             wifiIcon.sprite = null;
             wifiIconGO.SetActive(false);
-            Debug.Log("Network Disconnected");
+
+            if (debugMode)
+            {
+                Debug.Log("Network Disconnected");
+            }
+
         }
         else
         {
             wifiIconGO.SetActive(true);
             wifiIcon.sprite = GetSpriteForRSSI(currentRSSI);
-            Debug.Log($"Current RSSI: {currentRSSI}");
+
+            if (debugMode)
+            {
+                Debug.Log($"Current RSSI: {currentRSSI}");
+            }
+
         }
     }
 
