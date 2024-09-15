@@ -32,7 +32,7 @@ public class LockScreen : MonoBehaviour
 
             for (int i = 0; i < 17; i++)
             {
-                if (SystemInfo.batteryLevel * 100 <= (i + 1) * 6.25)
+                if (SystemInfo.batteryLevel * 100 >= (i + 1) * 6.25)
                 {
                     batteryBG.sprite = batteryBGImages[i];
                 }
