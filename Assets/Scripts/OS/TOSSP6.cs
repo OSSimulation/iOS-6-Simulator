@@ -82,11 +82,14 @@ public class TOSSP6 : MonoBehaviour
     [SerializeField] private GameObject closeButton;
     public GameObject appSwitcherHolder;
     public bool appSwitcherOpen = false;
-    public List<AppObject> openApps = new List<AppObject>();
+    public bool isSwitchingApp;
     private List<Transform> appSwitcherPages = new List<Transform>();
 
-    public Dictionary<string, GameObject> openAppHolder = new Dictionary<string, GameObject>();
+    public Dictionary<string, GameObject> openAppHolder = new();
+    public List<AppObject> openApps = new();
+
     public string currentOpenApp;
+    public string previousOpenApp;
 
     void Awake()
     {
@@ -106,7 +109,6 @@ public class TOSSP6 : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         SlideToUnlock.SliderMovedToEnd += UnlockSystem;
-        App.AppOpened += ShowCurrentApp;
 
         foreach (Transform child in appSwitcherHolder.transform)
         {
@@ -166,7 +168,7 @@ public class TOSSP6 : MonoBehaviour
         {
             GameObject currentAppHolder = openAppHolder[currentOpenApp];
 
-            if (currentAppHolder != null)
+            if (currentAppHolder != null && !isSwitchingApp)
             {
                 currentAppHolder.transform.position = screenCentreTransform.transform.position;
             }
@@ -183,8 +185,21 @@ public class TOSSP6 : MonoBehaviour
             {
                 foreach (GameObject sceneContent in sceneContentArray)
                 {
-                    openAppHolder.Add(scene.name, sceneContent);
+                    if (!openAppHolder.ContainsKey(scene.name))
+                    {
+                        openAppHolder.Add(scene.name, sceneContent);
+                    }
                 }
+            }
+        }
+
+        if (openAppHolder.ContainsKey(scene.name))
+        {
+            GameObject currentAppHolder = openAppHolder[scene.name];
+
+            if (currentAppHolder != null)
+            {
+                currentAppHolder.SetActive(true);
             }
         }
     }
@@ -201,7 +216,7 @@ public class TOSSP6 : MonoBehaviour
             isHomeScreen = true;
 
 
-            dock.GetComponent<Animator>().Play("Dock_Show");
+            dock.GetComponent<Dock_Anim>().DockShow();
         }
         else if (isInApp)
         {
@@ -209,7 +224,7 @@ public class TOSSP6 : MonoBehaviour
             isLockScreen = false;
             isHomeScreen = false;
 
-            ShowCurrentApp();
+            ShowApp(currentOpenApp);
         }
 
         soundManager.PlaySound(SoundEvents.SYSTEM_UNLOCK, volume, SoundSources.SYSTEM_SFX);
@@ -229,7 +244,7 @@ public class TOSSP6 : MonoBehaviour
 
             if (isHomeScreen)
             {
-                dock.GetComponent<Animator>().Play("Dock_Hide");
+                dock.GetComponent<Dock_Anim>().DockHide();
             }
 
             if (isMediaControlCentre)
@@ -287,10 +302,10 @@ public class TOSSP6 : MonoBehaviour
         brightnessObject.gameObject.SetActive(true);
         brightnessObject.GetComponent<Image>().raycastTarget = true;
         LockDevice?.Invoke();
-        screenHolder.GetComponent<Animator>().Play("Empty");
+        screenHolder.GetComponent<Screen_Anim>().ScreenLower();
         statusBar.LockBar();
         HideHomeScreen();
-        HideCurrentApp(currentOpenApp);
+        HideApp(currentOpenApp);
         homeScreenGO.transform.localScale = new Vector3(0, 0, 0);
     }
 
@@ -392,7 +407,7 @@ public class TOSSP6 : MonoBehaviour
             }
             else if (!isHomeScreen)
             {
-                HideCurrentApp(currentOpenApp);
+                HideApp(currentOpenApp);
 
                 ShowHomeScreen();
                 isHomeScreen = true;
@@ -412,16 +427,21 @@ public class TOSSP6 : MonoBehaviour
             transform.gameObject.SetActive(true);
         }
 
-        pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Animator>().Play("Page_Zoom_In");
-        dock.GetComponent<Animator>().Play("Dock_Show");
+        pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomIn();
+        dock.GetComponent<Dock_Anim>().DockShow();
         homeScreenGO.transform.localScale = new Vector3(1, 1, 1);
     }
 
     public void HideHomeScreen()
     {
-        pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Animator>().Play("Empty");
-        screenHolder.GetComponent<Animator>().Play("Empty");
-        dock.GetComponent<Animator>().Play("Dock_Hide");
+        pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Page_Anim>().Hide();
+
+        if (appSwitcherOpen)
+        {
+            StartCoroutine(CloseAppSwitcher());
+        }
+
+        dock.GetComponent<Dock_Anim>().DockHide();
     }
 
     public void HideNotificationCentre()
@@ -433,7 +453,7 @@ public class TOSSP6 : MonoBehaviour
 
     public void OpenAppSwitcher()
     {
-        screenHolder.GetComponent<Animator>().Play("Screen_Lift");
+        screenHolder.GetComponent<Screen_Anim>().ScreenLift();
         closeButton.SetActive(true);
         appSwitcherOpen = true;
     }
@@ -445,7 +465,7 @@ public class TOSSP6 : MonoBehaviour
 
     public IEnumerator CloseAppSwitcher()
     {
-        screenHolder.GetComponent<Animator>().Play("Screen_Lower");
+        screenHolder.GetComponent<Screen_Anim>().ScreenLower();
         closeButton.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         switcher.GoToPage(3);
@@ -481,6 +501,8 @@ public class TOSSP6 : MonoBehaviour
             newButton.name = app.name;
 
             newAppComponent.app = app;
+
+            appSwitcherHolder.transform.Find(app.name).SetAsFirstSibling();
         }
     }
 
@@ -497,32 +519,28 @@ public class TOSSP6 : MonoBehaviour
         return false;
     }
 
-    public void HideCurrentApp(string currentSceneName)
+    public void HideApp(string sceneName)
     {
-        if (openAppHolder.ContainsKey(currentSceneName))
+        if (openAppHolder.ContainsKey(sceneName))
         {
-            GameObject currentAppHolder = openAppHolder[currentSceneName];
+            GameObject currentAppHolder = openAppHolder[sceneName];
 
             if (currentAppHolder != null)
             {
-                //currentAppHolder.SetActive(false);
-                currentAppHolder.GetComponent<Animator>().Play("App_Zoom_Out");
+                currentAppHolder.GetComponent<App_Anim>().AppZoomOut();
             }
         }
     }
 
-    public void ShowCurrentApp()
+    public void ShowApp(string sceneName)
     {
-        string currentSceneName = currentOpenApp;
-
-        if (openAppHolder.ContainsKey(currentSceneName))
+        if (openAppHolder.ContainsKey(sceneName))
         {
-            GameObject currentAppHolder = openAppHolder[currentSceneName];
+            GameObject currentAppHolder = openAppHolder[sceneName];
 
             if (currentAppHolder != null)
             {
-                //currentAppHolder.SetActive(false);
-                currentAppHolder.GetComponent<Animator>().Play("App_Zoom_In");
+                currentAppHolder.GetComponent<App_Anim>().AppZoomIn();
             }
         }
     }
@@ -542,4 +560,3 @@ public class TOSSP6 : MonoBehaviour
         return volume = PlayerPrefs.GetFloat("System_Volume_SFX");
     }
 }
-

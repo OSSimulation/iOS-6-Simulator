@@ -123,12 +123,12 @@ public class PageTurner_Home : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         if (!main.isInApp)
         {
-            pages[currentPage - 1].gameObject.GetComponent<Animator>().Play("Page_Zoom_In");
+            pages[currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomIn();
         }
     }
 
     public void PlayZoomOut()
     {
-        pages[currentPage - 1].gameObject.GetComponent<Animator>().Play("Page_Zoom_Out");
+        pages[currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomOut();
     }
 }

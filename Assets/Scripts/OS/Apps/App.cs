@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,7 +14,6 @@ public class App : MonoBehaviour
     public AppObject app;
 
     Image image;
-    Button button;
     TMP_Text appName;
 
     private void Awake()
@@ -24,8 +24,6 @@ public class App : MonoBehaviour
 
     private void Start()
     {
-        button = this.gameObject.GetComponent<Button>();
-
         image = this.gameObject.GetComponent<Image>();
         image.sprite = app.appIcon;
 
@@ -41,35 +39,9 @@ public class App : MonoBehaviour
 
     public void OpenApp()
     {
-        if (!SceneManager.GetSceneByName(this.app.sceneName).isLoaded)
-        {
-            SceneManager.LoadScene(app.sceneName, LoadSceneMode.Additive);
-        }
-
-        if (main.openAppHolder.ContainsKey(this.app.sceneName))
-        {
-            GameObject currentAppHolder = main.openAppHolder[this.app.sceneName];
-
-            if (currentAppHolder != null)
-            {
-                currentAppHolder.SetActive(true);
-            }
-        }
-
-        foreach (var entry in main.openAppHolder)
-        {
-            string sceneName = entry.Key;
-            GameObject appHolder = entry.Value;
-
-            if (appHolder != null && sceneName != this.app.sceneName)
-            {
-                appHolder.SetActive(false);
-            }
-        }
-
         if (!main.openApps.Contains(app))
         {
-            main.openApps.Add(app);
+            main.openApps.Insert(0, app);
         }
         else if (main.openApps.Contains(app))
         {
@@ -78,17 +50,83 @@ public class App : MonoBehaviour
             main.appSwitcherHolder.transform.Find(app.name).SetAsFirstSibling();
         }
 
-        main.HideHomeScreen();
-        AppOpened?.Invoke();
-
-        if (main.appSwitcherOpen)
+        if (main.isHomeScreen)
         {
-            StartCoroutine(main.CloseAppSwitcher());
+            if (!SceneManager.GetSceneByName(app.sceneName).isLoaded)
+            {
+                SceneManager.LoadScene(app.sceneName, LoadSceneMode.Additive);
+            }
+
+            if (main.openAppHolder.ContainsKey(app.sceneName))
+            {
+                GameObject currentAppHolder = main.openAppHolder[app.sceneName];
+
+                if (currentAppHolder != null)
+                {
+                    currentAppHolder.SetActive(true);
+                }
+            }
+
+            foreach (var entry in main.openAppHolder)
+            {
+                string sceneName = entry.Key;
+                GameObject appHolder = entry.Value;
+
+                if (appHolder != null && sceneName != app.sceneName)
+                {
+                    appHolder.SetActive(false);
+                }
+            }
+
+            if (main.currentOpenApp != app.sceneName)
+            {
+                main.previousOpenApp = main.currentOpenApp;
+            }
+
+            main.currentOpenApp = app.sceneName;
+
+            main.HideHomeScreen();
+            main.ShowApp(app.sceneName);
+
+            main.isInApp = true;
+            main.isHomeScreen = false;
+
+            AppOpened?.Invoke();
+            return;
+        }
+        else if (main.isInApp && main.currentOpenApp != app.sceneName)
+        {
+            StartCoroutine(SwitchApp());
+            return;
+        }
+    }
+
+    private IEnumerator SwitchApp()
+    {
+        StartCoroutine(main.CloseAppSwitcher());
+        yield return new WaitForSeconds(0.5f);
+
+        if (main.currentOpenApp != app.sceneName)
+        {
+            main.previousOpenApp = main.currentOpenApp;
         }
 
-        main.currentOpenApp = this.app.sceneName;
+        main.currentOpenApp = app.sceneName;
 
-        main.isInApp = true;
-        main.isHomeScreen = false;
+        //App Switch Animation Stuff Here
+        main.openAppHolder[main.currentOpenApp].GetComponent<Object_State>().Activate();
+        main.openAppHolder[main.currentOpenApp].GetComponent<App_Anim>().Cancel();
+        main.openAppHolder[main.currentOpenApp].GetComponent<App_Anim>().AppSwitchIn();
+        main.openAppHolder[main.previousOpenApp].GetComponent<App_Anim>().AppSwitchOut();
+
+        yield return new WaitForSeconds(0.25f);
+
+        main.openAppHolder[main.currentOpenApp].GetComponentInParent<Canvas>().sortingOrder = 200;
+        main.openAppHolder[main.previousOpenApp].GetComponentInParent<Canvas>().sortingOrder = 0;
+
+        yield return new WaitForSeconds(0.75f);
+
+        main.openAppHolder[main.previousOpenApp].GetComponent<Object_State>().Deactivate();
+        main.isSwitchingApp = false;
     }
 }

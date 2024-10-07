@@ -786,27 +786,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -150}
   m_SizeDelta: {x: -50, y: 125}
   m_Pivot: {x: 0.5, y: 0}
---- !u!95 &89846156
-Animator:
-  serializedVersion: 5
+--- !u!114 &89846156
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 89846154}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: eccf23af22867482d83ec70d3467a51e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72197454cc0c8bd419a89a7d4db729f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &124137841
 GameObject:
   m_ObjectHideFlags: 0
@@ -1546,10 +1537,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 173152225}
-  - component: {fileID: 173152229}
   - component: {fileID: 173152228}
   - component: {fileID: 173152227}
   - component: {fileID: 173152226}
+  - component: {fileID: 173152231}
   - component: {fileID: 173152230}
   m_Layer: 0
   m_Name: Page
@@ -1657,27 +1648,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 173152224}
   m_CullTransparentMesh: 1
---- !u!95 &173152229
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 173152224}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7fdbca396aa5f4ff49cff75f788a3a79, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &173152230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1688,6 +1658,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7896b3b266d73b74d9968e0c64a0f71f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &173152231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173152224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fb4c479db7edcd4bb0846bebfec0e87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &209649817
@@ -2160,10 +2142,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 309379388}
-  - component: {fileID: 309379392}
   - component: {fileID: 309379391}
   - component: {fileID: 309379390}
   - component: {fileID: 309379389}
+  - component: {fileID: 309379394}
   - component: {fileID: 309379393}
   m_Layer: 0
   m_Name: Page
@@ -2255,27 +2237,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 309379387}
   m_CullTransparentMesh: 1
---- !u!95 &309379392
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 309379387}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7fdbca396aa5f4ff49cff75f788a3a79, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &309379393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2286,6 +2247,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7896b3b266d73b74d9968e0c64a0f71f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &309379394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309379387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fb4c479db7edcd4bb0846bebfec0e87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &325234372
@@ -4440,7 +4413,6 @@ GameObject:
   m_Component:
   - component: {fileID: 728808716}
   - component: {fileID: 728808718}
-  - component: {fileID: 728808719}
   - component: {fileID: 728808720}
   m_Layer: 5
   m_Name: Lock_Screen
@@ -4481,27 +4453,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 728808715}
   m_CullTransparentMesh: 1
---- !u!95 &728808719
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 728808715}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8014971f140f14520b07fa00a20352dd, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &728808720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4518,7 +4469,6 @@ MonoBehaviour:
   batteryUI: {fileID: 2028138289}
   batteryBG: {fileID: 639802586}
   batteryBGImages:
-  - {fileID: 21300000, guid: f069085ab93d05541b6a9d1e4646047a, type: 3}
   - {fileID: 21300000, guid: 8eb58ec7a846968498babd82748b291b, type: 3}
   - {fileID: 21300000, guid: b9f8d641d797003408d522fdb56b4b85, type: 3}
   - {fileID: 21300000, guid: 262386664a8d6fa45b5684e9bbb10b2e, type: 3}
@@ -4535,6 +4485,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e44d38e26614b1541930dab5e48551b6, type: 3}
   - {fileID: 21300000, guid: 52de0fd98765e8044a4ea44a7a8ef586, type: 3}
   - {fileID: 21300000, guid: dd0dc011ebc295f4780b50342300ca2b, type: 3}
+  topGO: {fileID: 914747792}
+  bottomGO: {fileID: 1928265980}
+  batteryUIGO: {fileID: 2028138289}
+  mediaControlGO: {fileID: 1812021438}
 --- !u!224 &729930409 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2787722457666026823, guid: 9f89ae23b2cb34234ae307dbb909f787, type: 3}
@@ -5682,6 +5636,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2787722457666026820, guid: 9f89ae23b2cb34234ae307dbb909f787, type: 3}
+      propertyPath: app
+      value: 
+      objectReference: {fileID: 11400000, guid: 27e0d42f338be284b82a9754b678608a, type: 2}
     - target: {fileID: 2787722457666026821, guid: 9f89ae23b2cb34234ae307dbb909f787, type: 3}
       propertyPath: m_Colors.m_FadeDuration
       value: 0
@@ -8176,7 +8134,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 70176a515af0d424786573c19408c1e8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a820d6ef39d34af4d9a4defa02815224, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8194,27 +8152,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1643989262}
   m_CullTransparentMesh: 1
---- !u!95 &1643989266
-Animator:
-  serializedVersion: 5
+--- !u!114 &1643989266
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1643989262}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1f058cee1355546a48ceec3b586fc163, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aaa6e9ade4e12543b644f99e3864e3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1648424456
 GameObject:
   m_ObjectHideFlags: 0
@@ -8928,8 +8877,10 @@ MonoBehaviour:
   closeButton: {fileID: 1536830110}
   appSwitcherHolder: {fileID: 636635134}
   appSwitcherOpen: 0
+  isSwitchingApp: 0
   openApps: []
   currentOpenApp: 
+  previousOpenApp: 
 --- !u!114 &1668756393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9948,6 +9899,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2787722457666026820, guid: 9f89ae23b2cb34234ae307dbb909f787, type: 3}
+      propertyPath: app
+      value: 
+      objectReference: {fileID: 11400000, guid: d6ec847198a76364da8dd1d32b66545f, type: 2}
     - target: {fileID: 2787722457666026821, guid: 9f89ae23b2cb34234ae307dbb909f787, type: 3}
       propertyPath: m_Colors.m_FadeDuration
       value: 0
