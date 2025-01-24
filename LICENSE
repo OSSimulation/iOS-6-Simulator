@@ -1,24 +1,18 @@
-This is free and unencumbered software released into the public domain.
+THE OS SIMULATION PROJECT LICENSE v1_iOS
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
+This license only affects the iOS 6 Simulator, and does not effect other repositories such as the Website.
 
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
+WHAT IS COVERED BY THIS LICENSE:
+- All original content created by The OS Simulation Project
+WHAT IS NOT COVERED BY THIS LICENSE:
+- Anything created by other parties such as Microsoft or Apple.
+(This means anything related to "Windows XP Gui Test", "iOS 6 Simulator", "XBOX 360 Gui Test", "Windows RT Gui Test" and "OS Menu".
+You are still free to use them of course, but don't be surprised if Microsoft or Apple shoots you down with us, especially if you try to make money off it.)
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-For more information, please refer to <https://unlicense.org>
+TERMS AND CONDITIONS
+1. Your version of this simulator MUST be open source and publicly available. You cannot make this closed-source.
+2. You are free to do whatever you wish with this repository. This includes but is NOT limited to:
+- Modification/Edits
+- Commercial Use/Monetization (Not recommended for obvious reasons if you use things not covered by this license)
+- Redistribution
+If you didn't understand what that means... it means you can do whatever you want, as long as your code is open source and publicly available.
