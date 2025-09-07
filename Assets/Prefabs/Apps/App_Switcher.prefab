@@ -148,6 +148,8 @@ GameObject:
   - component: {fileID: 2787722457666026874}
   - component: {fileID: 2787722457666026821}
   - component: {fileID: 2787722457666026820}
+  - component: {fileID: 208206556774208853}
+  - component: {fileID: 3413045932018524809}
   m_Layer: 5
   m_Name: App_Switcher
   m_TagString: Untagged
@@ -284,6 +286,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   app: {fileID: 0}
+--- !u!114 &208206556774208853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2787722457666026822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 016916026519bac4a83e6a61b85524ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1
+--- !u!114 &3413045932018524809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2787722457666026822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec385fdbe3b1417a98f0ed3e8697313, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quit: {fileID: 7224152785515557494}
 --- !u!1 &7224152785515557494
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,7 +324,6 @@ GameObject:
   - component: {fileID: 1095673819045085210}
   - component: {fileID: 2487675314581428596}
   - component: {fileID: 1824321124300929349}
-  - component: {fileID: 4204856704395743929}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -406,7 +433,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4204856704395743929}
+      - m_Target: {fileID: 3413045932018524809}
         m_TargetAssemblyTypeName: App_ForceQuit, Assembly-CSharp
         m_MethodName: ForceQuitApp
         m_Mode: 1
@@ -418,15 +445,3 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4204856704395743929
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7224152785515557494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fec385fdbe3b1417a98f0ed3e8697313, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

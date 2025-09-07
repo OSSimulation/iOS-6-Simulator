@@ -13,16 +13,19 @@ public class TOSSP6 : MonoBehaviour
     [SerializeField] private Settings settings;
     [SerializeField] private GameObject screenHolder;
     [SerializeField] private UI_NotificationCentre notificationCentre;
+    [SerializeField] private Image wallpaper;
     public Transform screenCentreTransform;
-    public static event Action DeviceUnlocked;
-    public static event Action LockDevice;
     public float brightness;
+    private bool firstBoot = true;
     public bool isSystemLocked;
     public bool isDisplayOff;
     public bool isInApp;
     public bool isInNotificationCentre;
     public int maxPasscodeTries;
     public bool isSystemCharging;
+
+    public static event Action DeviceUnlocked;
+    public static event Action LockDevice;
 
     //Sound
     [Space(10)]
@@ -68,6 +71,11 @@ public class TOSSP6 : MonoBehaviour
     public TMP_Text calendarDateText;
     public TMP_Text calendarDayText;
     public bool isHomeScreen = false;
+    public bool isSpotlight = false;
+    public bool isWiggleMode = false;
+    public bool isSwitcherWiggleMode = false;
+
+    public static event Action WiggleStop;
 
     //Dock
     [Space(10)]
@@ -97,18 +105,40 @@ public class TOSSP6 : MonoBehaviour
 
         if (objs.Length > 1)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
 
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+        LockScreen.BioAccept += StartUnlockSystem;
+        Home_Layout.AppsLoaded += FirstBootLoadPageCall;
+    }
+
+    private void FirstBootLoadPageCall()
+    {
+        StartCoroutine(FirstBootLoadPage());
+    }
+
+    private IEnumerator FirstBootLoadPage()
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (firstBoot)
+        {
+            HideHomeScreen(0);
+            firstBoot = false;
+
+            yield return new WaitForSeconds(0.15f);
+
+            LockSystem();
+        }
     }
 
     void Start()
     {
         Application.targetFrameRate = 60;
-        SlideToUnlock.SliderMovedToEnd += UnlockSystem;
+        LockScreen.BioAccept += StartUnlockSystem;
 
         foreach (Transform child in appSwitcherHolder.transform)
         {
@@ -116,9 +146,6 @@ public class TOSSP6 : MonoBehaviour
         }
 
         Debug.Log(SystemInfo.operatingSystem);
-
-        HideHomeScreen();
-        homeScreenGO.transform.localScale = new Vector3(0, 0, 0);
 
         CloseLockMediaCentre();
 
@@ -132,6 +159,15 @@ public class TOSSP6 : MonoBehaviour
 
         HomeButton();
         PowerButton();
+
+        if (pageTurner.currentPage == 1)
+        {
+            isSpotlight = true;
+        }
+        else
+        {
+            isSpotlight = false;
+        }
 
         GameObject[] dayObjects = GameObject.FindGameObjectsWithTag("DAY");
         foreach (GameObject dayObject in dayObjects)
@@ -204,8 +240,22 @@ public class TOSSP6 : MonoBehaviour
         }
     }
 
-    private void UnlockSystem()
+    private void StartUnlockSystem()
     {
+        float delay = 0;
+
+        if (lockScreen.UsePasscode)
+            delay = 0f;
+        else if (!lockScreen.UsePasscode)
+            delay = 0.25f;
+
+        StartCoroutine(UnlockSystem(delay));
+    }
+
+    private IEnumerator UnlockSystem(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
         this.GetComponent<Canvas>().sortingLayerName = "Main";
         this.GetComponent<Canvas>().sortingOrder = 0;
 
@@ -215,6 +265,10 @@ public class TOSSP6 : MonoBehaviour
             isLockScreen = false;
             isHomeScreen = true;
 
+            if (isSpotlight)
+            {
+                pageTurner.GoToPage(2);
+            }
 
             dock.GetComponent<Dock_Anim>().DockShow();
         }
@@ -231,7 +285,7 @@ public class TOSSP6 : MonoBehaviour
         DeviceUnlocked?.Invoke();
     }
 
-    private void LockSystem()
+    public void LockSystem()
     {
         if (!isSystemLocked && !isDisplayOff && isHomeScreen)
         {
@@ -250,16 +304,6 @@ public class TOSSP6 : MonoBehaviour
             if (isMediaControlCentre)
             {
                 CloseLockMediaCentre();
-            }
-
-            if (isInNotificationCentre)
-            {
-                HideNotificationCentre();
-            }
-
-            if (appSwitcherOpen)
-            {
-                StartCoroutine(CloseAppSwitcher());
             }
 
             LockDisplay();
@@ -293,20 +337,32 @@ public class TOSSP6 : MonoBehaviour
 
             LockDisplay();
         }
+
+        if (isInNotificationCentre)
+        {
+            HideNotificationCentre();
+        }
+
+        if (appSwitcherOpen)
+        {
+            StartCoroutine(CloseAppSwitcher());
+        }
+
+        isWiggleMode = false;
+        isSwitcherWiggleMode = false;
     }
 
     private void LockDisplay()
     {
-        this.GetComponent<Canvas>().sortingLayerName = "Main";
-        this.GetComponent<Canvas>().sortingOrder = 9999;
+        GetComponent<Canvas>().sortingLayerName = "Main";
+        GetComponent<Canvas>().sortingOrder = 9999;
         brightnessObject.gameObject.SetActive(true);
         brightnessObject.GetComponent<Image>().raycastTarget = true;
         LockDevice?.Invoke();
         screenHolder.GetComponent<Screen_Anim>().ScreenLower();
         statusBar.LockBar();
-        HideHomeScreen();
+        HideHomeScreen(0);
         HideApp(currentOpenApp);
-        homeScreenGO.transform.localScale = new Vector3(0, 0, 0);
     }
 
     private void UnlockDisplay()
@@ -314,8 +370,8 @@ public class TOSSP6 : MonoBehaviour
         brightnessObject.gameObject.SetActive(false);
         brightnessObject.GetComponent<Image>().raycastTarget = false;
 
-        this.GetComponent<Canvas>().sortingLayerName = "Main";
-        this.GetComponent<Canvas>().sortingOrder = 499;
+        GetComponent<Canvas>().sortingLayerName = "Main";
+        GetComponent<Canvas>().sortingOrder = 499;
     }
 
     public void HomeButton()
@@ -413,7 +469,16 @@ public class TOSSP6 : MonoBehaviour
                 isHomeScreen = true;
                 isInApp = false;
             }
-            else if (isHomeScreen && pageTurner.currentPage != 1)
+            else if (isWiggleMode)
+            {
+                isWiggleMode = false;
+                WiggleStop?.Invoke();
+            }
+            else if (isHomeScreen && pageTurner.currentPage != 2 || isSpotlight)
+            {
+                pageTurner.GoToPage(2);
+            }
+            else if (isHomeScreen && pageTurner.currentPage == 2 && !isSpotlight)
             {
                 pageTurner.GoToPage(1);
             }
@@ -429,12 +494,15 @@ public class TOSSP6 : MonoBehaviour
 
         pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomIn();
         dock.GetComponent<Dock_Anim>().DockShow();
-        homeScreenGO.transform.localScale = new Vector3(1, 1, 1);
+        dock.SetActive(true);
     }
 
-    public void HideHomeScreen()
+    public void HideHomeScreen(float speed = 0.5f)
     {
-        pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Page_Anim>().Hide();
+        if (isSpotlight)
+            pageTurner.GoToPage(2);
+
+        pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomOut(speed);
 
         if (appSwitcherOpen)
         {
@@ -465,10 +533,11 @@ public class TOSSP6 : MonoBehaviour
 
     public IEnumerator CloseAppSwitcher()
     {
+        isSwitcherWiggleMode = false;
         screenHolder.GetComponent<Screen_Anim>().ScreenLower();
         closeButton.SetActive(false);
         yield return new WaitForSeconds(0.5f);
-        switcher.GoToPage(3);
+        switcher.GoToPage(3, 0);
         appSwitcherOpen = false;
     }
 
@@ -528,12 +597,21 @@ public class TOSSP6 : MonoBehaviour
             if (currentAppHolder != null)
             {
                 currentAppHolder.GetComponent<App_Anim>().AppZoomOut();
+                LeanTween.value(wallpaper.gameObject, 0f, 1f, 0.5f).setOnUpdate((float t) =>
+                {
+                    wallpaper.color = Color.Lerp(Color.black, Color.white, t);
+                });
             }
         }
     }
 
     public void ShowApp(string sceneName)
     {
+        LeanTween.value(wallpaper.gameObject, 0f, 1f, 0.5f).setOnUpdate((float t) =>
+        {
+            wallpaper.color = Color.Lerp(Color.white, Color.black, t);
+        });
+
         if (openAppHolder.ContainsKey(sceneName))
         {
             GameObject currentAppHolder = openAppHolder[sceneName];

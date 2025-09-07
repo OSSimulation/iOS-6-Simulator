@@ -1,0 +1,40 @@
+﻿{
+    /* 
+    * 🎶 🎶 🎶
+    * iPhoneeeeee, take me homeeeeee
+    * To the place, where apps belong
+    * iPhone Home Screeeeeeen, Grid-like layoooooout
+    * Take me homeeeeee, iPhoneeeeee
+    * 🎶 🎶 🎶
+    */
+
+    "dock": [
+        "Phone.asset",
+        "Mail.asset",
+        "Safari.asset",
+        "Music.asset"
+    ],
+    "page1": [
+        "Messages.asset",
+        "Calendar.asset",
+        "Photos.asset",
+        "Camera.asset",
+        "Videos.asset",
+        "Maps.asset",
+        "Weather.asset",
+        "Passbook.asset",
+        "Reminders.asset",
+        "Clock.asset",
+        "Stocks.asset",
+        "Notes.asset",
+        "iTunes.asset",
+        "App Store.asset",
+        "Game Centre.asset",
+        "Settings.asset"
+    ],
+    "page2": [
+        "Contacts.asset",
+        "Calculator.asset",
+        "Voice Memos.asset"
+    ]
+}

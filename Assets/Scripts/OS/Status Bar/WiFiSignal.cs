@@ -52,17 +52,21 @@ public class WiFiSignal : MonoBehaviour
 
     private Sprite GetSpriteForRSSI(int rssi)
     {
-        if (IsBetween(rssi, 36, 99))
+        if (IsBetween(rssi, 75, 99))
         {
-            return variants[0];
+            return variants[3];
         }
-        else if (IsBetween(rssi, 21, 35))
+        else if (IsBetween(rssi, 50, 74))
+        {
+            return variants[2];
+        }
+        else if (IsBetween(rssi, 25, 49))
         {
             return variants[1];
         }
-        else if (IsBetween(rssi, 0, 20))
+        else if (IsBetween(rssi, 0, 24))
         {
-            return variants[2];
+            return variants[0];
         }
 
         return null;

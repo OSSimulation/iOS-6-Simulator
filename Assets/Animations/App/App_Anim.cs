@@ -3,22 +3,20 @@ using UnityEngine;
 public class App_Anim : MonoBehaviour
 {
     [SerializeField] private GameObject safeZone;
-    TOSSP6 main;
 
     private void Awake()
     {
         safeZone.SetActive(false);
-
-        GameObject OS = GameObject.FindGameObjectWithTag("TOSSP6");
-        main = OS.GetComponent<TOSSP6>();
     }
 
     private void Start()
     {
-        LeanTween.scale(gameObject.GetComponent<RectTransform>(), new Vector2(0, 0), 0f).setDelay(0.01f);
-        LeanTween.scale(gameObject.GetComponent<RectTransform>(), new Vector2(1, 1), 0.3f).setOnComplete(() =>
+        LeanTween.scale(gameObject.GetComponent<RectTransform>(), new Vector2(0, 0), 0f).setOnComplete(() =>
         {
-            LeanTween.cancel(gameObject);
+            LeanTween.scale(gameObject.GetComponent<RectTransform>(), new Vector2(1, 1), 0.5f).setEase(LeanTweenType.easeInQuint).setOnComplete(() =>
+            {
+                LeanTween.cancel(gameObject);
+            });
         });
 
         safeZone.SetActive(true);
@@ -31,10 +29,12 @@ public class App_Anim : MonoBehaviour
 
     public void AppZoomIn()
     {
-        LeanTween.scale(gameObject.GetComponent<RectTransform>(), new Vector2(0, 0), 0f).setDelay(0.01f);
-        LeanTween.scale(gameObject.GetComponent<RectTransform>(), new Vector2(1, 1), 0.3f).setOnComplete(() =>
+        LeanTween.scale(gameObject.GetComponent<RectTransform>(), new Vector2(0, 0), 0f).setOnComplete(() =>
         {
-            LeanTween.cancel(gameObject);
+            LeanTween.scale(gameObject.GetComponent<RectTransform>(), new Vector2(1, 1), 0.5f).setEase(LeanTweenType.easeInQuint).setOnComplete(() =>
+            {
+                LeanTween.cancel(gameObject);
+            });
         });
 
         safeZone.SetActive(true);
@@ -42,18 +42,15 @@ public class App_Anim : MonoBehaviour
 
     public void AppZoomOut()
     {
-        LeanTween.scale(gameObject.GetComponent<RectTransform>(), new Vector2(0, 0), 0.3f).setOnComplete(() =>
+        LeanTween.scale(gameObject.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f).setEase(LeanTweenType.easeOutQuint).setOnComplete(() =>
         {
             LeanTween.cancel(gameObject);
+            safeZone.SetActive(false);
         });
-
-        safeZone.SetActive(false);
     }
 
     public void AppSwitchIn()
     {
-        main.isSwitchingApp = true;
-
         LeanTween.scale(gameObject, new Vector3(0.25f, 0.25f, 0.25f), 0f)
             .setOnComplete(() =>
             {

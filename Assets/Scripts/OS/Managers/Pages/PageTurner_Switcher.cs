@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,27 +6,34 @@ public class PageTurner_Switcher : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     private Vector3 panelLocation;
     [SerializeField] private float percentThreshold = 0.25f;
-    [SerializeField] private float easing = 0.25f;
     [SerializeField] private int totalPages;
-    [SerializeField] private Transform[] pageObjects;
-    private List<Transform> pages = new List<Transform>();
+    [SerializeField] private Transform[] pageObjects => pages.ToArray();
+    private List<Transform> pages = new();
     public int currentPage;
 
     private void Start()
     {
+        Switcher_Layout.SwitcherAppsOverflow += AddPages;
+
         panelLocation = transform.position;
 
-        totalPages = this.transform.childCount;
+        totalPages = transform.childCount;
 
         foreach (Transform child in transform)
         {
-
             pages.Add(child);
         }
 
-        pageObjects = pages.ToArray();
-
         currentPage = pageObjects.Length;
+    }
+
+    private void AddPages()
+    {
+        Transform page = transform.GetChild(transform.childCount - 1);
+        page.localPosition = new Vector2(pageObjects[totalPages - 1].transform.localPosition.x + 640, 0f);
+
+        pages.Add(page);
+        totalPages = transform.childCount;
     }
 
     public void OnDrag(PointerEventData data)
@@ -44,23 +50,23 @@ public class PageTurner_Switcher : MonoBehaviour, IDragHandler, IEndDragHandler
         float percentage = (data.pressPosition.x - data.position.x) / Screen.width;
         if (Mathf.Abs(percentage) >= percentThreshold)
         {
-            Vector3 newLocation = panelLocation;
+            float newX = panelLocation.x;
             if (percentage > 0 && currentPage < totalPages)
             {
                 currentPage++;
-                newLocation += new Vector3(-Screen.width, 0, 0);
+                newX -= Screen.width;
             }
             else if (percentage < 0 && currentPage > 1)
             {
                 currentPage--;
-                newLocation += new Vector3(Screen.width, 0, 0);
+                newX += Screen.width;
             }
-            StartCoroutine(SmoothMove(transform.position, newLocation, easing));
-            panelLocation = newLocation;
+            SmoothMove(transform.position.x, newX);
+            panelLocation.x = newX;
         }
         else
         {
-            StartCoroutine(SmoothMove(transform.position, panelLocation, easing));
+            SmoothMove(transform.position.x, panelLocation.x);
         }
 
         if (pageObjects.Length == 1)
@@ -69,23 +75,18 @@ public class PageTurner_Switcher : MonoBehaviour, IDragHandler, IEndDragHandler
         }
     }
 
-    IEnumerator SmoothMove(Vector3 startpos, Vector3 endpos, float seconds)
+    void SmoothMove(float endX, float moveTime = 0.5f)
     {
-        float t = 0f;
-        while (t <= 1.0)
-        {
-            t += Time.deltaTime / seconds;
-            transform.position = Vector3.Lerp(startpos, endpos, Mathf.SmoothStep(0f, 1f, t));
-            yield return null;
-        }
+        Vector3 endPos = new Vector3(endX, transform.position.y, transform.position.z);
+        LeanTween.move(gameObject, endPos, moveTime).setEase(LeanTweenType.easeOutQuint);
     }
 
-    public void GoToPage(int pageNumber)
+    public void GoToPage(int pageNumber, float moveTime = 0.5f)
     {
         int targetPage = Mathf.Clamp(pageNumber, 1, totalPages);
-        Vector3 newLocation = panelLocation + new Vector3((currentPage - targetPage) * Screen.width, 0, 0);
-        StartCoroutine(SmoothMove(transform.position, newLocation, easing));
-        panelLocation = newLocation;
+        float newX = panelLocation.x + (currentPage - targetPage) * Screen.width;
+        SmoothMove(newX, moveTime);
+        panelLocation.x = newX;
         currentPage = targetPage;
     }
 }

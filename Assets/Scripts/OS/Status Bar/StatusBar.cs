@@ -22,13 +22,26 @@ public class StatusBar : MonoBehaviour
     [Header("Middle")]
     [SerializeField] private TMP_Text smallTimeLabel;
 
+    [SerializeField] private GameObject dnd;
+
     //Right Side
     [Space(10)]
     [Header("Right Side")]
     [SerializeField] private GameObject batteryNormal;
     [SerializeField] private GameObject batteryCharging;
+    [SerializeField] private GameObject batteryHold;
     [SerializeField] private Image batteryFill;
-    public GameObject alarmIcon;
+
+    [SerializeField] private GameObject alarmIcon;
+
+    [SerializeField] private GameObject btDisconnected;
+    [SerializeField] private GameObject btConnecting;
+    [SerializeField] private GameObject btConnected;
+
+    [SerializeField] private GameObject musicPlay;
+
+    [SerializeField] private GameObject rotLock;
+
     bool hasChargingSoundPlayed = false;
 
     //Date & Time
@@ -93,7 +106,6 @@ public class StatusBar : MonoBehaviour
 
     public void SetDate()
     {
-        System.DateTime theDate = System.DateTime.Now;
         date = System.DateTime.Now.ToString("dddd, d MMMM");
         dateLabel.text = date;
     }
@@ -105,10 +117,12 @@ public class StatusBar : MonoBehaviour
 
     public void SetBatteryState()
     {
-        if (SystemInfo.batteryStatus == BatteryStatus.Charging || SystemInfo.batteryStatus == BatteryStatus.NotCharging || SystemInfo.batteryStatus == BatteryStatus.Full)
+        if (SystemInfo.batteryStatus == BatteryStatus.NotCharging || SystemInfo.batteryStatus == BatteryStatus.Full)
         {
-            batteryCharging.SetActive(true);
+            batteryCharging.SetActive(false);
             batteryNormal.SetActive(false);
+            batteryHold.SetActive(true);
+
             main.isSystemCharging = true;
 
             if (!hasChargingSoundPlayed)
@@ -117,10 +131,33 @@ public class StatusBar : MonoBehaviour
                 hasChargingSoundPlayed = true;
             }
         }
+        else if (SystemInfo.batteryStatus == BatteryStatus.Charging)
+        {
+            batteryCharging.SetActive(true);
+            batteryNormal.SetActive(false);
+            batteryHold.SetActive(false);
+
+            main.isSystemCharging = true;
+
+            if (!hasChargingSoundPlayed)
+            {
+                main.soundManager.PlaySound(SoundEvents.SYSTEM_CHARGE, main.GetSFXVolume(), SoundSources.SYSTEM_SFX);
+                hasChargingSoundPlayed = true;
+            }
+        }
+        else if (SystemInfo.batteryStatus == BatteryStatus.Unknown)
+        {
+            batteryCharging.SetActive(false);
+            batteryNormal.SetActive(false);
+            batteryHold.SetActive(true);
+
+            main.isSystemCharging = false;
+        }
         else if (SystemInfo.batteryStatus == BatteryStatus.Discharging)
         {
             batteryCharging.SetActive(false);
             batteryNormal.SetActive(true);
+            batteryHold.SetActive(true);
 
             main.isSystemCharging = false;
 

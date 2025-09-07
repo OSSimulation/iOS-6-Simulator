@@ -1,8 +1,13 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class App_ForceQuit : MonoBehaviour
 {
+    public static event Action AppForceQuit;
+
+    [SerializeField] private GameObject quit;
+
     TOSSP6 os;
 
     App app;
@@ -20,19 +25,30 @@ public class App_ForceQuit : MonoBehaviour
         App.AppOpened += MoveForceQuitButton;
     }
 
+    private void OnEnable()
+    {
+        quit.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        quit.SetActive(false);
+    }
+
     public void ForceQuitApp()
     {
-        if (SceneManager.GetActiveScene().name == this.app.app.sceneName)
-        {
-            os.GoHome();
-        }
-
         App.AppOpened -= MoveForceQuitButton;
 
-        os.openApps.Remove(app.app);
-        os.openAppHolder.Remove(app.app.sceneName);
-        Destroy(this.transform.parent.gameObject);
-        SceneManager.UnloadSceneAsync(this.app.app.sceneName);
+        SceneManager.UnloadSceneAsync(app.app.sceneName);
+
+        AppForceQuit?.Invoke();
+
+        LeanTween.scale(gameObject, new Vector3(0, 0, 0), 0.45f).setEase(LeanTweenType.easeOutQuint).setOnComplete(() =>
+        {
+            os.openApps.Remove(app.app);
+            os.openAppHolder.Remove(app.app.sceneName);
+            Destroy(gameObject);
+        });
     }
 
     private void MoveForceQuitButton()

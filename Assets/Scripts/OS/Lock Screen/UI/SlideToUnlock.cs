@@ -10,12 +10,15 @@ public class SlideToUnlock : MonoBehaviour, IDragHandler, IEndDragHandler
     [SerializeField] private GameObject startGO;
     [SerializeField] private GameObject endGO;
 
+    [SerializeField] private LockScreen ls;
+
     float start;
     float end;
 
     private void Start()
     {
         TOSSP6.LockDevice += ResetSlider;
+        LockScreen.BioReject += ResetSlider;
     }
 
     private void Update()

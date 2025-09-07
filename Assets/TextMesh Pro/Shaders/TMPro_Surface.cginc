@@ -45,8 +45,8 @@ void PixShader(Input input, inout SurfaceOutput o)
 	// Signed distance
 	float c = tex2D(_MainTex, input.uv_MainTex).a;
 	float sd = (.5 - c - input.param.x) * scale + .5;
-	float outline = _OutlineWidth*_ScaleRatioA * scale;
-	float softness = _OutlineSoftness*_ScaleRatioA * scale;
+	float outline = _OutlineWidth * _ScaleRatioA * scale;
+	float softness = _OutlineSoftness * _ScaleRatioA * scale;
 
 	// Color & Alpha
 	float4 faceColor = _FaceColor;
@@ -61,7 +61,7 @@ void PixShader(Input input, inout SurfaceOutput o)
 #if BEVEL_ON
 	float3 delta = float3(1.0 / _TextureWidth, 1.0 / _TextureHeight, 0.0);
 
-	float4 smp4x = {tex2D(_MainTex, input.uv_MainTex - delta.xz).a,
+	float4 smp4x = { tex2D(_MainTex, input.uv_MainTex - delta.xz).a,
 					tex2D(_MainTex, input.uv_MainTex + delta.xz).a,
 					tex2D(_MainTex, input.uv_MainTex - delta.zy).a,
 					tex2D(_MainTex, input.uv_MainTex + delta.zy).a };
@@ -82,11 +82,11 @@ void PixShader(Input input, inout SurfaceOutput o)
 	float3 n = float3(0, 0, -1);
 	float3 emission = float3(0, 0, 0);
 #endif
-	
+
 #if GLOW_ON
 	float4 glowColor = GetGlowColor(sd, scale);
 	glowColor.a *= input.color.a;
-	emission += glowColor.rgb*glowColor.a;
+	emission += glowColor.rgb * glowColor.a;
 	faceColor = BlendARGB(glowColor, faceColor);
 	faceColor.rgb /= max(faceColor.a, 0.0001);
 #endif

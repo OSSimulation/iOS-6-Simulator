@@ -10,7 +10,6 @@ public class App : MonoBehaviour
     public static event Action AppOpened;
 
     private TOSSP6 main;
-
     public AppObject app;
 
     Image image;
@@ -24,21 +23,24 @@ public class App : MonoBehaviour
 
     private void Start()
     {
-        image = this.gameObject.GetComponent<Image>();
+        image = gameObject.GetComponent<Image>();
         image.sprite = app.appIcon;
 
-        appName = this.gameObject.GetComponentInChildren<TMP_Text>();
+        appName = gameObject.GetComponentInChildren<TMP_Text>();
         appName.text = app.appName;
 
         if (appName.text == "Calendar")
         {
-            Instantiate(main.calendarDateText, this.transform);
-            Instantiate(main.calendarDayText, this.transform);
+            Instantiate(main.calendarDateText, transform);
+            Instantiate(main.calendarDayText, transform);
         }
     }
 
     public void OpenApp()
     {
+        if (main.isWiggleMode || main.isSwitcherWiggleMode)
+            return;
+
         if (!main.openApps.Contains(app))
         {
             main.openApps.Insert(0, app);
@@ -106,6 +108,8 @@ public class App : MonoBehaviour
         StartCoroutine(main.CloseAppSwitcher());
         yield return new WaitForSeconds(0.5f);
 
+        main.isSwitchingApp = true;
+
         if (main.currentOpenApp != app.sceneName)
         {
             main.previousOpenApp = main.currentOpenApp;
@@ -113,7 +117,6 @@ public class App : MonoBehaviour
 
         main.currentOpenApp = app.sceneName;
 
-        //App Switch Animation Stuff Here
         main.openAppHolder[main.currentOpenApp].GetComponent<Object_State>().Activate();
         main.openAppHolder[main.currentOpenApp].GetComponent<App_Anim>().Cancel();
         main.openAppHolder[main.currentOpenApp].GetComponent<App_Anim>().AppSwitchIn();
