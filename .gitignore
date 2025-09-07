@@ -73,3 +73,7 @@ crashlytics-build.properties
 
 #MacOS DS_Store
 *.DS_Store
+
+/[Aa]ssets/[Pp]lugins/[Aa]kassets/[Ss]moothGridLayout/*
+/[Aa]ssets/[Pp]lugins/[Aa]kassets/[Ss]moothGridLayout.meta
+Assets/Plugins/Akassets.meta

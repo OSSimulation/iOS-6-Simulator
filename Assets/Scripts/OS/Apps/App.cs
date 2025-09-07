@@ -35,12 +35,11 @@ public class App : MonoBehaviour
             Instantiate(main.calendarDayText, transform);
         }
     }
-
+    
     public void OpenApp()
     {
-        if (main.isWiggleMode || main.isSwitcherWiggleMode)
-            return;
-
+        if (main.isWiggleMode || main.isSwitcherWiggleMode) return; 
+                
         if (!main.openApps.Contains(app))
         {
             main.openApps.Insert(0, app);
