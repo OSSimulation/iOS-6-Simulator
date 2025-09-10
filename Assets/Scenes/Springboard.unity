@@ -3485,14 +3485,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 560407908}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74cb2f39e15b0cf49a7b067465a11db5, type: 3}
+  m_Script: {fileID: 11500000, guid: c1446a32c635f6943851a80a7fcee694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lerpSpeed: 10
-  placeholdersTransform: {fileID: 0}
-  elementsTransform: {fileID: 0}
-  elementsContainer: {fileID: 0}
-  gridLayoutGroup: {fileID: 0}
+  moveSpeed: 10
+  itemHolder: {fileID: 1784500115}
+  cloneHolder: {fileID: 1364207312}
+  grid: {fileID: 1364207313}
 --- !u!114 &560407911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9121,7 +9120,7 @@ GameObject:
   - component: {fileID: 1364207312}
   - component: {fileID: 1364207313}
   m_Layer: 5
-  m_Name: Placeholders Container
+  m_Name: Clones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12971,7 +12970,7 @@ GameObject:
   - component: {fileID: 1784500118}
   - component: {fileID: 1784500120}
   m_Layer: 5
-  m_Name: Elements Container [Put elements here]
+  m_Name: Real Items
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13006,7 +13005,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1784500114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a0e28ab837a484468b6376509603f23, type: 3}
+  m_Script: {fileID: 11500000, guid: e4be2abd51d771c4e8a84f024910f8db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1784500118
@@ -13174,7 +13173,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 67d9f2f4886284f4282e714f4f3c623c, type: 3}
+  m_Sprite: {fileID: 0}
   m_PreserveAspect: 0
 --- !u!1 &1820682741
 GameObject:

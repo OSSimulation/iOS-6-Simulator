@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.tailspin96.smoothgridlayout": {
+      "version": "https://github.com/Tailspin96/Unity-Smooth-Grid-Layout.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d76d1b5a78b6981e0c23c884b7f71aa0b2c026cb"
+    },
     "com.unity.2d.animation": {
       "version": "7.1.0",
       "depth": 1,
@@ -136,7 +143,7 @@
       }
     },
     "com.unity.ide.rider": {
-      "version": "3.0.36",
+      "version": "3.0.37",
       "depth": 0,
       "source": "registry",
       "dependencies": {

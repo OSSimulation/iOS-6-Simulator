@@ -32,16 +32,21 @@ public class StatusBar : MonoBehaviour
     [SerializeField] private GameObject batteryHold;
     [SerializeField] private Image batteryFill;
 
+    [Space(10)]
     [SerializeField] private GameObject alarmIcon;
 
+    [Space(10)]
     [SerializeField] private GameObject btDisconnected;
     [SerializeField] private GameObject btConnecting;
     [SerializeField] private GameObject btConnected;
 
+    [Space(10)]
     [SerializeField] private GameObject musicPlay;
 
+    [Space(10)]
     [SerializeField] private GameObject rotLock;
 
+    [Space(10)]
     bool hasChargingSoundPlayed = false;
 
     //Date & Time
@@ -157,7 +162,7 @@ public class StatusBar : MonoBehaviour
         {
             batteryCharging.SetActive(false);
             batteryNormal.SetActive(true);
-            batteryHold.SetActive(true);
+            batteryHold.SetActive(false);
 
             main.isSystemCharging = false;
 

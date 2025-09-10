@@ -24,13 +24,4 @@ public class OS6_Editor_Menu : MonoBehaviour
             }
         }
     }
-
-    [MenuItem("OS6/Get Smooth Grid Layout", priority = 100)]
-    static void SmoothGridLayout()
-    {
-        if (EditorUtility.DisplayDialog("Get 'Smooth Grid UI Layout'", "You will be redirected to the Unity Asset Store. If you decide to fork or distribute the iOS 6 Simulator source code, this package cannot be included.", "iAgree", "iDisagree"))
-        {
-            Application.OpenURL("https://assetstore.unity.com/packages/tools/gui/smooth-grid-layout-ui-208357");
-        }
-    }
 }

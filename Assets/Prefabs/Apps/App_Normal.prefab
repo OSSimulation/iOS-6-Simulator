@@ -300,9 +300,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9983bce574ab24f4c9c5aa321b1efca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  left: {fileID: 2812247024902537061}
-  right: {fileID: 3065014419836216538}
-  parentAfterDrag: {fileID: 0}
 --- !u!114 &3180575958417833161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,7 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe116433de04814391bcba8896d0262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: 0
+  Direction: 0
 --- !u!222 &7201429176213445828
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -404,7 +401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5803922}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -472,7 +469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe116433de04814391bcba8896d0262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: 1
+  Direction: 0
 --- !u!222 &8928424031619363295
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -494,7 +491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5803922}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

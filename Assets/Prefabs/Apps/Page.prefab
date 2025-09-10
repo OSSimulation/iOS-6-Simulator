@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 6531235474667516996}
   - component: {fileID: 3036656908154460708}
   m_Layer: 5
-  m_Name: Elements Container [Put elements here]
+  m_Name: Real Items
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7284872559923833840}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a0e28ab837a484468b6376509603f23, type: 3}
+  m_Script: {fileID: 11500000, guid: e4be2abd51d771c4e8a84f024910f8db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2547088895178361213
@@ -151,7 +151,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Direction: 2
-  holder: {fileID: 7284872559923833840}
 --- !u!222 &6531235474667516996
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -191,7 +190,7 @@ GameObject:
   - component: {fileID: 7284872561199847920}
   - component: {fileID: 7284872561199847921}
   m_Layer: 5
-  m_Name: Placeholders Container
+  m_Name: Clones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -329,11 +328,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7284872561388604291}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74cb2f39e15b0cf49a7b067465a11db5, type: 3}
+  m_Script: {fileID: 11500000, guid: c1446a32c635f6943851a80a7fcee694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lerpSpeed: 10
-  placeholdersTransform: {fileID: 7284872561199847920}
-  elementsTransform: {fileID: 7284872559923833841}
-  elementsContainer: {fileID: 7284872559923833842}
-  gridLayoutGroup: {fileID: 7284872561199847921}
+  moveSpeed: 10
+  itemHolder: {fileID: 7284872559923833841}
+  cloneHolder: {fileID: 7284872561199847920}
+  grid: {fileID: 7284872561199847921}

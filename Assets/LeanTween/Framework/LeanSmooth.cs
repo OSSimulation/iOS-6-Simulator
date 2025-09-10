@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 /**
 * Use these smooth methods to move one value towards another<br /><br />
@@ -10,8 +12,7 @@
 * @class LeanSmooth
 */
 
-public class LeanSmooth
-{
+public class LeanSmooth {
 
 
     /**
