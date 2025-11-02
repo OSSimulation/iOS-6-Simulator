@@ -17,12 +17,7 @@ public class App_ForceQuit : MonoBehaviour
         GameObject OS = GameObject.FindGameObjectWithTag("TOSSP6");
         os = OS.GetComponent<TOSSP6>();
 
-        this.app = GetComponentInParent<App>();
-    }
-
-    private void Start()
-    {
-        App.AppOpened += MoveForceQuitButton;
+        app = GetComponentInParent<App>();
     }
 
     private void OnEnable()
@@ -37,11 +32,7 @@ public class App_ForceQuit : MonoBehaviour
 
     public void ForceQuitApp()
     {
-        App.AppOpened -= MoveForceQuitButton;
-
         SceneManager.UnloadSceneAsync(app.app.sceneName);
-
-        AppForceQuit?.Invoke();
 
         LeanTween.scale(gameObject, new Vector3(0, 0, 0), 0.45f).setEase(LeanTweenType.easeOutQuint).setOnComplete(() =>
         {
@@ -49,10 +40,7 @@ public class App_ForceQuit : MonoBehaviour
             os.openAppHolder.Remove(app.app.sceneName);
             Destroy(gameObject);
         });
-    }
 
-    private void MoveForceQuitButton()
-    {
-        this.gameObject.transform.SetAsLastSibling();
+        AppForceQuit?.Invoke();
     }
 }

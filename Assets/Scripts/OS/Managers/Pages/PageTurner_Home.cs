@@ -47,7 +47,7 @@ public class PageTurner_Home : MonoBehaviour, IDragHandler, IEndDragHandler
             xPos += 640;
         }
 
-        totalPages = this.transform.childCount;
+        totalPages = transform.childCount;
     }
 
     private void AddPagesAfterLoad()

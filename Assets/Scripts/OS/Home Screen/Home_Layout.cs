@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Home_Layout : MonoBehaviour
 {
@@ -262,20 +263,37 @@ public class Home_Layout : MonoBehaviour
         foreach (Transform child in pageHolder.transform)
         {
             Home_Page pageComponent = child.GetComponent<Home_Page>();
-            if (pageComponent == null)
-            {
-                continue;
-            }
+            if (pageComponent == null) continue;
 
-            if (pageComponent.isEmpty)
+            if (pageComponent.isEmpty && pageCount > 1)
             {
                 pages.Remove(pageComponent);
                 pageCount--;
-                Destroy(child.gameObject);
-                pageTurner.GoToPage(pageCount + 1);
+                DestroyImmediate(child.gameObject);
+
             }
         }
 
+        LayoutRebuilder.ForceRebuildLayoutImmediate(pageHolder.GetComponent<RectTransform>());
+
+        for (int i = 0; i < pageHolder.transform.childCount; i++)
+        {
+            Transform child = pageTurner.transform.GetChild(i);
+            child.localPosition = new Vector2((i - 1) * 640f, 0f);
+        }
+
+        int page;
+
+        if (pageTurner.currentPage > pageHolder.transform.childCount)
+        {
+            page = pageHolder.transform.childCount;
+        }
+        else
+        {
+            page = pageTurner.currentPage;
+        }
+
+        pageTurner.GoToPage(page);
         SaveData();
     }
 }

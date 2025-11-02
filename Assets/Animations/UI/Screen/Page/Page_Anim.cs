@@ -22,5 +22,10 @@ public class Page_Anim : MonoBehaviour
         transform.localScale = new Vector3(0, 0, 0);
         gameObject.SetActive(false);
     }
+
+    public void Cancel()
+    {
+        LeanTween.cancel(gameObject);
+    }
 }
 

@@ -1,14 +1,14 @@
 {
   "dependencies": {
-    "com.tailspin96.smoothgridlayout": {
-      "version": "https://github.com/Tailspin96/Unity-Smooth-Grid-Layout.git",
+    "com.tailspin96.smoothuilayouts": {
+      "version": "https://github.com/Tailspin96/Unity-Smooth-UI-Layouts.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "d76d1b5a78b6981e0c23c884b7f71aa0b2c026cb"
+      "hash": "299e8f91876027b28025a7a28c82e0858e46f054"
     },
     "com.unity.2d.animation": {
-      "version": "7.1.0",
+      "version": "7.1.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -20,7 +20,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.2d.aseprite": {
-      "version": "1.1.1",
+      "version": "1.1.6",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -105,16 +105,17 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.8.11",
+      "version": "1.8.18",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.mathematics": "1.2.1"
+        "com.unity.mathematics": "1.2.1",
+        "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "2.2.0",
+      "version": "2.5.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -128,22 +129,22 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.feature.2d": {
-      "version": "2.0.0",
+      "version": "2.0.1",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
-        "com.unity.2d.animation": "7.1.0",
+        "com.unity.2d.animation": "7.1.1",
         "com.unity.2d.pixel-perfect": "5.0.3",
         "com.unity.2d.psdimporter": "6.0.9",
         "com.unity.2d.sprite": "1.0.0",
         "com.unity.2d.spriteshape": "7.0.7",
         "com.unity.2d.tilemap": "1.0.0",
         "com.unity.2d.tilemap.extras": "2.2.7",
-        "com.unity.2d.aseprite": "1.1.1"
+        "com.unity.2d.aseprite": "1.1.6"
       }
     },
     "com.unity.ide.rider": {
-      "version": "3.0.37",
+      "version": "3.0.38",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -152,11 +153,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.23",
+      "version": "2.0.25",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.test-framework": "1.1.9"
+        "com.unity.test-framework": "1.1.31"
       },
       "url": "https://packages.unity.com"
     },
@@ -175,14 +176,14 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "3.2.1",
+      "version": "3.2.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "12.1.14",
+      "version": "12.1.15",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
@@ -192,14 +193,14 @@
       }
     },
     "com.unity.render-pipelines.universal": {
-      "version": "12.1.14",
+      "version": "12.1.15",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
         "com.unity.burst": "1.8.9",
-        "com.unity.render-pipelines.core": "12.1.14",
-        "com.unity.shadergraph": "12.1.14"
+        "com.unity.render-pipelines.core": "12.1.15",
+        "com.unity.shadergraph": "12.1.15"
       }
     },
     "com.unity.searcher": {
@@ -210,11 +211,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "12.1.14",
+      "version": "12.1.15",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "12.1.14",
+        "com.unity.render-pipelines.core": "12.1.15",
         "com.unity.searcher": "4.9.1"
       }
     },
@@ -312,7 +313,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.visualscripting": {
-      "version": "1.9.8",
+      "version": "1.9.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {

@@ -18,7 +18,7 @@ public class OS6_Editor_Menu : MonoBehaviour
 
         if (File.Exists(layoutFilePath))
         {
-            if (EditorUtility.DisplayDialog("Reset Home Screen Home Screen Layout", "Are you sure you want to reset the Home Screen Layout? This cannot be undone. Changes will take effect after a restart.", "Yes", "No"))
+            if (EditorUtility.DisplayDialog("Reset Home Screen Home Screen Layout", "Are you sure you want to reset the Home Screen Layout? This cannot be undone. Changes will take effect after a play mode restart.", "Yes", "No"))
             {
                 File.Delete(layoutFilePath);
             }

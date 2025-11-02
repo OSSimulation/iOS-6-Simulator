@@ -85,13 +85,11 @@ public class TOSSP6 : MonoBehaviour
     //App Switcher
     [Space(10)]
     [Header("App Switcher")]
-    [SerializeField] private PageTurner_Switcher switcher;
+    [SerializeField] private Switcher_Controller switcher;
     [SerializeField] private GameObject appSwitcherButton;
     [SerializeField] private GameObject closeButton;
-    public GameObject appSwitcherHolder;
     public bool appSwitcherOpen = false;
     public bool isSwitchingApp;
-    private List<Transform> appSwitcherPages = new List<Transform>();
 
     public Dictionary<string, GameObject> openAppHolder = new();
     public List<AppObject> openApps = new();
@@ -139,11 +137,6 @@ public class TOSSP6 : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         LockScreen.BioAccept += StartUnlockSystem;
-
-        foreach (Transform child in appSwitcherHolder.transform)
-        {
-            appSwitcherPages.Add(child.transform);
-        }
 
         Debug.Log(SystemInfo.operatingSystem);
 
@@ -193,11 +186,6 @@ public class TOSSP6 : MonoBehaviour
                     dateTextComponent.text = System.DateTime.Now.ToString("%d");
                 }
             }
-        }
-
-        foreach (AppObject app in openApps)
-        {
-            InstantiateAppButton(app);
         }
 
         if (openAppHolder.ContainsKey(currentOpenApp))
@@ -256,8 +244,8 @@ public class TOSSP6 : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        this.GetComponent<Canvas>().sortingLayerName = "Main";
-        this.GetComponent<Canvas>().sortingOrder = 0;
+        GetComponent<Canvas>().sortingLayerName = "Main";
+        GetComponent<Canvas>().sortingOrder = 0;
 
         if (!isInApp)
         {
@@ -492,6 +480,7 @@ public class TOSSP6 : MonoBehaviour
             transform.gameObject.SetActive(true);
         }
 
+        pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Page_Anim>().Cancel();
         pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomIn();
         dock.GetComponent<Dock_Anim>().DockShow();
         dock.SetActive(true);
@@ -502,6 +491,7 @@ public class TOSSP6 : MonoBehaviour
         if (isSpotlight)
             pageTurner.GoToPage(2);
 
+        pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Page_Anim>().Cancel();
         pageTurner.pages[pageTurner.currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomOut(speed);
 
         if (appSwitcherOpen)
@@ -559,37 +549,13 @@ public class TOSSP6 : MonoBehaviour
         defaultLock.SetActive(true);
     }
 
-    public void InstantiateAppButton(AppObject app)
-    {
-        if (!DoesButtonExistForApp(app))
-        {
-            GameObject newButton = Instantiate(appSwitcherButton, appSwitcherHolder.transform);
-
-            App newAppComponent = newButton.GetComponent<App>();
-
-            newButton.name = app.name;
-
-            newAppComponent.app = app;
-
-            appSwitcherHolder.transform.Find(app.name).SetAsFirstSibling();
-        }
-    }
-
-    private bool DoesButtonExistForApp(AppObject app)
-    {
-        foreach (Transform child in appSwitcherHolder.transform)
-        {
-            App appComponent = child.GetComponent<App>();
-            if (appComponent != null && appComponent.app == app)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void HideApp(string sceneName)
     {
+        LeanTween.value(wallpaper.gameObject, 0f, 1f, 0.5f).setOnUpdate((float t) =>
+        {
+            wallpaper.color = Color.Lerp(Color.black, Color.white, t);
+        });
+
         if (openAppHolder.ContainsKey(sceneName))
         {
             GameObject currentAppHolder = openAppHolder[sceneName];
@@ -597,10 +563,7 @@ public class TOSSP6 : MonoBehaviour
             if (currentAppHolder != null)
             {
                 currentAppHolder.GetComponent<App_Anim>().AppZoomOut();
-                LeanTween.value(wallpaper.gameObject, 0f, 1f, 0.5f).setOnUpdate((float t) =>
-                {
-                    wallpaper.color = Color.Lerp(Color.black, Color.white, t);
-                });
+
             }
         }
     }

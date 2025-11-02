@@ -35,11 +35,14 @@ public class App : MonoBehaviour
             Instantiate(main.calendarDayText, transform);
         }
     }
-    
+
     public void OpenApp()
     {
-        if (main.isWiggleMode || main.isSwitcherWiggleMode) return; 
-                
+        // Add an alert to say the app cant be opened if there is no valid scene
+        if (!SceneManager.GetSceneByName(app.sceneName).IsValid()) return;
+
+        if (main.isWiggleMode || main.isSwitcherWiggleMode) return;
+
         if (!main.openApps.Contains(app))
         {
             main.openApps.Insert(0, app);
@@ -48,7 +51,6 @@ public class App : MonoBehaviour
         {
             main.openApps.Remove(app);
             main.openApps.Insert(0, app);
-            main.appSwitcherHolder.transform.Find(app.name).SetAsFirstSibling();
         }
 
         if (main.isHomeScreen)

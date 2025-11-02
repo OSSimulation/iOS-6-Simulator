@@ -121,7 +121,10 @@ public class App_InputController : MonoBehaviour, IPointerDownHandler, IPointerU
     private void StopWiggleMode()
     {
         isWiggling = false;
-        LeanTween.cancel(gameObject);
+
+        if (type == AppButtonType.NORMAL)
+            LeanTween.cancel(gameObject);
+
         gameObject.transform.rotation = Quaternion.identity;
     }
 }
