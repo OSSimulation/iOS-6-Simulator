@@ -146,12 +146,13 @@ public class PageTurner_Home : MonoBehaviour, IDragHandler, IEndDragHandler
                 currentPage--;
                 newX += Screen.width;
             }
-            SmoothMove(transform.position.x, newX);
+
+            SmoothMove(newX);
             panelLocation.x = newX;
         }
         else
         {
-            SmoothMove(transform.position.x, panelLocation.x);
+            SmoothMove(panelLocation.x);
         }
 
         if (pageObjects.Length == 2)
@@ -160,17 +161,16 @@ public class PageTurner_Home : MonoBehaviour, IDragHandler, IEndDragHandler
         }
     }
 
-    void SmoothMove(float startX, float endX)
+    void SmoothMove(float endX)
     {
-        Vector3 endPos = new Vector3(endX, 663, transform.position.z);
-        LeanTween.move(gameObject, endPos, 0.5f).setEase(LeanTweenType.easeOutQuint);
+        LeanTween.moveX(gameObject, endX, 0.5f).setEase(LeanTweenType.easeOutQuint);
     }
 
     public void GoToPage(int pageNumber)
     {
         int targetPage = Mathf.Clamp(pageNumber, 1, totalPages);
         float newX = panelLocation.x + (currentPage - targetPage) * Screen.width;
-        SmoothMove(transform.position.x, newX);
+        SmoothMove(newX);
         panelLocation.x = newX;
         currentPage = targetPage;
     }

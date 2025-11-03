@@ -511,6 +511,12 @@ public class TOSSP6 : MonoBehaviour
 
     public void OpenAppSwitcher()
     {
+        if (isWiggleMode)
+        {
+            isWiggleMode = false;
+            WiggleStop?.Invoke();
+        }
+
         screenHolder.GetComponent<Screen_Anim>().ScreenLift();
         closeButton.SetActive(true);
         appSwitcherOpen = true;
