@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   buildForWin32:
-    name: Windows (x86) Build
+    name: Win32 Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -38,7 +38,7 @@ jobs:
           name: Windows (x86)
           path: build
   buildForWin64:
-    name: Windows (x86-64) Build
+    name: Win64 Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -72,7 +72,7 @@ jobs:
           name: Windows (x86-64)
           path: build
   buildForOSX:
-    name: Mac OS X Build
+    name: OSX Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
