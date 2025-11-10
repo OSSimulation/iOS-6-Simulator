@@ -103,7 +103,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Mac OS X (x86-64)
+          name: Mac OS X (Universal)
           path: build
   buildForLinux:
     name: Linux Build
