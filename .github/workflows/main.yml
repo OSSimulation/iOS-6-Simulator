@@ -10,6 +10,7 @@ jobs:
       matrix:
         unityVersion:
           - 2021.3.45f2
+        buildName: ["iOS6Simulator_Win32"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,6 +44,7 @@ jobs:
       matrix:
         unityVersion:
           - 2021.3.45f2
+        buildName: ["iOS6Simulator_Win64"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -70,12 +72,13 @@ jobs:
           name: Windows (x86-64)
           path: build
   buildForOSX:
-    name: Mac OS X (x86-64) Build
+    name: Mac OS X Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
         unityVersion:
           - 2021.3.45f2
+        buildName: ["iOS6Simulator_MacOS"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -109,6 +112,7 @@ jobs:
       matrix:
         unityVersion:
           - 2021.3.45f2
+        buildName: ["iOS6Simulator_Linux"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
