@@ -1,7 +1,6 @@
 ## Notes
 - ***THIS IS NOT AN EMULATOR AND DOES NOT RUN IPAs!*** For an actual iOS emulator, see [TouchHLE](https://github.com/touchHLE/touchHLE) or [qemu-ios](https://github.com/devos50/qemu-ios).
 - This is currently the latest branch. The springboard branch has been merged.
-- There are no releases/builds available yet. You must build this in order to playtest the simulator.
 - This project is NOT official in any way, shape or form... If it wasn't insanely obvious already.
 # iOS 6 Simulator
 iOS 6 Simulator is a work-in-progress recreation of iOS 6 in the Unity Engine. [You can see the current progress here](https://github.com/orgs/OSSimulation/projects/1).
