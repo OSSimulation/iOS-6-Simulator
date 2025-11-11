@@ -11,7 +11,7 @@ iOS 6 Simulator is a work-in-progress recreation of iOS 6 in the Unity Engine. [
 This project uses Unity version 2021.3.45f2. You also need Windows, macOS and Linux build support installed in order for the project to build properly.
 ### Supported Operating Systems
 - Windows 7 Service Pack 1 - Windows 11 (x86, x86-64)
-- Mac OS X High Sierra 10.13 - macOS Sequoia (x86-64, aarch64)
-- Linux (x86-64 only, Tested on Linux Mint 22, YMMV.)
+- Mac OS X High Sierra 10.13 - macOS Tahoe (x86-64, aarch64)
+- Linux (x86-64 only, Tested on Linux Mint 22 and Debian 13, YMMV.)
 
 Anything not listed is not supported at the moment. Proper iOS and Android support will come eventually. eta wen???? eta someday...
