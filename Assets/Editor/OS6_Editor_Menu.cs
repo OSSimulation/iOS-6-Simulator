@@ -5,13 +5,7 @@ using UnityEngine;
 
 public class OS6_Editor_Menu : MonoBehaviour
 {
-    [MenuItem("OS6/Open Filesystem", priority = 0)]
-    static void OpenFileSystem()
-    {
-        Process.Start(Application.persistentDataPath);
-    }
-
-    [MenuItem("OS6/Reset Home Screen Layout", priority = 11)]
+    [MenuItem("OS6/Reset Home Screen Layout", priority = 0)]
     static void ResetHomeScreen()
     {
         string layoutFilePath = System_Locations.SYS_PREFERENCES + "com.os6.iconState.json";
@@ -23,5 +17,29 @@ public class OS6_Editor_Menu : MonoBehaviour
                 File.Delete(layoutFilePath);
             }
         }
+    }
+
+    [MenuItem("OS6/Filesystem Locations/Open Root Filesystem...", priority = 0)]
+    static void OpenFileSystem()
+    {
+        Process.Start(Application.persistentDataPath);
+    }
+
+    [MenuItem("OS6/Filesystem Locations/Open Ringtones Folder...", priority = 11)]
+    static void OpenRingtones()
+    {
+        Process.Start(Path.Combine(Application.persistentDataPath, System_Locations.RINGTONES));
+    }
+
+    [MenuItem("OS6/Filesystem Locations/Open Photos Folder...", priority = 11)]
+    static void OpenUserPhotos()
+    {
+        Process.Start(Path.Combine(Application.persistentDataPath, System_Locations.USER_IMAGES));
+    }
+
+    [MenuItem("OS6/Filesystem Locations/Open Wallpapers Folder...", priority = 11)]
+    static void OpenWallpapers()
+    {
+        Process.Start(Path.Combine(Application.persistentDataPath, System_Locations.WALLPAPERS));
     }
 }

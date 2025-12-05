@@ -11668,6 +11668,7 @@ GameObject:
   - component: {fileID: 1668756393}
   - component: {fileID: 1668756394}
   - component: {fileID: 1668756395}
+  - component: {fileID: 1668756396}
   m_Layer: 5
   m_Name: OS
   m_TagString: TOSSP6
@@ -11858,6 +11859,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96820d41e54963a4b81b16a20270d450, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1668756396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668756386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe5a6e86dd61dbc4fab7bfd7dc3ab0b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1680226631
