@@ -4,6 +4,11 @@
 - This project is NOT official in any way, shape or form... If it wasn't insanely obvious already.
 # iOS 6 Simulator
 iOS 6 Simulator is a work-in-progress recreation of iOS 6 in the Unity Engine. [You can see the current progress here](https://github.com/orgs/OSSimulation/projects/1).
+### Keybinds
+- Backspace - Sleep/Wake Button
+- Spacebar - Home Button
+- Minus - Volume Down
+- Plus - Volume Up
 ## Authors
 - [@Tailspin96](https://github.com/tailspin96)
 - [@Thomasluigi07](https://github.com/thomasluigi07)
