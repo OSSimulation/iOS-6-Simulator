@@ -9,6 +9,7 @@ iOS 6 Simulator is a work-in-progress recreation of iOS 6 in the Unity Engine. [
 - Spacebar - Home Button
 - Minus - Volume Down
 - Plus - Volume Up
+- Backtick - Ring/Silent Button
 ## Authors
 - [@Tailspin96](https://github.com/tailspin96)
 - [@Thomasluigi07](https://github.com/thomasluigi07)
