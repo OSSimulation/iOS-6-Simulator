@@ -1,18 +1,18 @@
-THE OS SIMULATION PROJECT LICENSE v1_iOS
+THE OS SIMULATION PROJECT LICENSE v1.1_iOS
+LAST UPDATED 10 JAN 2026
 
-This license only affects the iOS 6 Simulator, and does not effect other repositories such as the Website.
+This license only affects the iOS 6 Simulator, and does not effect other repositories such as the Website or OS Menu.
 
 WHAT IS COVERED BY THIS LICENSE:
-- All original content created by The OS Simulation Project
+All original assets created by The OS Simulation Project and contributors, including but not limited to images, audio, video, code, text and models that weren't completely based on things created by other parties.
+
 WHAT IS NOT COVERED BY THIS LICENSE:
-- Anything created by other parties such as Microsoft or Apple.
-(This means anything related to "Windows XP Gui Test", "iOS 6 Simulator", "XBOX 360 Gui Test", "Windows RT Gui Test" and "OS Menu".
-You are still free to use them of course, but don't be surprised if Microsoft or Apple shoots you down with us, especially if you try to make money off it.)
+Any assets created, copyrighted or under a different license by other parties not involved in this project, such as Microsoft or Apple. This includes assets such as images, audio, video, code and text.
+However, you are still free to use the assets that are NOT created by us, but don't be suprised if Microsoft or Apple shoots you down with us... especially if you try to make money off it.
 
 TERMS AND CONDITIONS
-1. Your version of this simulator MUST be open source and publicly available. You cannot make this closed-source.
-2. You are free to do whatever you wish with this repository. This includes but is NOT limited to:
-- Modification/Edits
-- Commercial Use/Monetization (Not recommended for obvious reasons if you use things not covered by this license)
-- Redistribution
-If you didn't understand what that means... it means you can do whatever you want, as long as your code is open source and publicly available.
+1. Your version of this simulator MUST have it's code publicly available. You cannot release your own version of this simulator unless the code is easily accesssible by the user (i.e. code bundled with a release or hosted online on GitHub/GitLab/Internet Archive).
+2. You are free to do whatever you wish with this repository, as long as you make your code open-source. This includes but is NOT limited to:
+- Modification (i.e. making edits to our Roblox experiences)
+- Commerical Use/Monetization (However, if you monetize anything not made by us, such as copyrighted assets by Microsoft or Apple, don't expect them to ignore that you did that.)
+- Redistribution (i.e. reuploading our YouTube videos, reuploading our Roblox experiences/assets)
