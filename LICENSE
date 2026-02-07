@@ -1,14 +1,17 @@
-THE OS SIMULATION PROJECT LICENSE v1.1_iOS
-LAST UPDATED 10 JAN 2026
+THE OS SIMULATION PROJECT LICENSE v1.2_iOS
+LAST UPDATED 7 FEB 2026
 
 This license only affects the iOS 6 Simulator, and does not effect other repositories such as the Website or OS Menu.
 
 WHAT IS COVERED BY THIS LICENSE:
 All original assets created by The OS Simulation Project and contributors, including but not limited to images, audio, video, code, text and models that weren't completely based on things created by other parties.
+This also includes YouTube videos uploaded to the OSSimulation channel.
 
 WHAT IS NOT COVERED BY THIS LICENSE:
 Any assets created, copyrighted or under a different license by other parties not involved in this project, such as Microsoft or Apple. This includes assets such as images, audio, video, code and text.
+This applies to YouTube videos created by contributors such as Tailspin96, unless they specifically list that their videos are covered by this license.
 However, you are still free to use the assets that are NOT created by us, but don't be suprised if Microsoft or Apple shoots you down with us... especially if you try to make money off it.
+
 
 TERMS AND CONDITIONS
 1. Your version of this simulator MUST have it's code publicly available. You cannot release your own version of this simulator unless the code is easily accesssible by the user (i.e. code bundled with a release or hosted online on GitHub/GitLab/Internet Archive).
