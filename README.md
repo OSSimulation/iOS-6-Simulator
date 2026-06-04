@@ -12,7 +12,7 @@ iOS 6 Simulator is a work-in-progress recreation of iOS 6 in the Unity Engine. [
 - Backtick - Ring/Silent Button
 ## Authors
 - [@Tailspin96](https://github.com/tailspin96)
-- [@Thomasluigi07](https://github.com/thomasluigi07)
+- [@Tamasina07](https://github.com/tamasina07)
 ## Build Info
 This project uses Unity version 2021.3.45f2. You also need Windows, macOS and Linux build support installed in order for the project to build properly.
 ### Supported Operating Systems
