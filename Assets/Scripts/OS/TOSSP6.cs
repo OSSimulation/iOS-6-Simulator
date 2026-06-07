@@ -23,6 +23,13 @@ public class TOSSP6 : MonoBehaviour
     public bool isInNotificationCentre;
     public int maxPasscodeTries;
     public bool isSystemCharging;
+    public idevice deviceType;
+    public enum idevice
+    {
+        iPhone,
+        iPod,
+        iPad
+    }
 
     public static event Action DeviceUnlocked;
     public static event Action LockDevice;

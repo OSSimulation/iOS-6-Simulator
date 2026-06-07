@@ -2743,7 +2743,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -11786,6 +11786,7 @@ MonoBehaviour:
   isInNotificationCentre: 0
   maxPasscodeTries: 0
   isSystemCharging: 0
+  deviceType: 0
   soundManager: {fileID: 1668756393}
   volume: 0
   isSilentMode: 0
@@ -14533,7 +14534,7 @@ MonoBehaviour:
   main: {fileID: 1668756391}
   statusBarHolder: {fileID: 2012272688}
   barType: 0
-  deviceName: {fileID: 454526259}
+  deviceName: {fileID: 454526261}
   smallTimeLabel: {fileID: 2021950142}
   dnd: {fileID: 0}
   batteryNormal: {fileID: 744566621}

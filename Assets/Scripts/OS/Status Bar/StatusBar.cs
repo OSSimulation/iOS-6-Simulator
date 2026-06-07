@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class StatusBar : MonoBehaviour
 {
     [SerializeField] private TOSSP6 main;
@@ -15,7 +16,7 @@ public class StatusBar : MonoBehaviour
     //Left Side
     [Space(10)]
     [Header("Left Side")]
-    public GameObject deviceName;
+    public TMP_Text deviceName;
 
     //Middle
     [Space(10)]
@@ -67,9 +68,8 @@ public class StatusBar : MonoBehaviour
         TOSSP6.DeviceUnlocked += NormalBar;
         UI_NotificationCentre.ShowNotificationCentre += NotificationBar;
         UI_NotificationCentre.HideNotificationCentre += NormalBar;
-
         smallTimeLabel.gameObject.SetActive(false);
-
+        //GetDeviceType();
         statusBarHolder.GetComponent<Canvas>().sortingOrder = 500;
     }
 
@@ -80,6 +80,28 @@ public class StatusBar : MonoBehaviour
         SetBatteryPercent();
         SetBatteryState();
     }
+
+    // I'm going to scream. I have no fricking clue on why TOSSP6.deviceType is a static or whatever object.
+    // IT IS NOT. IT IS NOT REFFERED AS ONE ANYWHERE IN THE CODE. WHY ARE YOU COMPLAINING.
+    // This is most likely an Unity thing I don't understand but I've spent 2 hours trying to figure this out and I give up.
+    // No carrier/device name changing for you... (until theres some better method atp i  dont know . I DONT KNOW!!!!!!!!!!!!!!!!!!!!!!!!!!)
+    /*
+    private void GetDeviceType()
+    {
+        switch (TOSSP6.deviceType)
+        {
+            case TOSSP6.idevice.iPhone:
+                deviceName.text = "No SIM";
+                break;
+            case TOSSP6.idevice.iPod:
+                deviceName.text = "iPod";
+                break;
+            case TOSSP6.idevice.iPad:
+                deviceName.text = "iPad";
+                break;
+         }
+    }
+    */
 
     private void CheckStatusBarSettings()
     {
