@@ -2700,7 +2700,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: iPhone
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: efe7a6cf58b8545b6a4817d787fd2c71, type: 2}
   m_sharedMaterial: {fileID: 8102812214850371274, guid: efe7a6cf58b8545b6a4817d787fd2c71, type: 2}
@@ -2734,7 +2734,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -11787,6 +11787,8 @@ MonoBehaviour:
   maxPasscodeTries: 0
   isSystemCharging: 0
   deviceType: 0
+  isSIMInserted: 0
+  carrierName: 
   soundManager: {fileID: 1668756393}
   volume: 0
   isSilentMode: 0
@@ -14808,7 +14810,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.21568628, g: 0.21568628, b: 0.21568628, a: 0.88235295}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.69803923}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

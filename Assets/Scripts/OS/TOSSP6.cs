@@ -24,6 +24,8 @@ public class TOSSP6 : MonoBehaviour
     public int maxPasscodeTries;
     public bool isSystemCharging;
     public idevice deviceType;
+    public bool isSIMInserted;
+    public string carrierName;
     public enum idevice
     {
         iPhone,

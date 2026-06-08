@@ -69,8 +69,8 @@ public class StatusBar : MonoBehaviour
         UI_NotificationCentre.ShowNotificationCentre += NotificationBar;
         UI_NotificationCentre.HideNotificationCentre += NormalBar;
         smallTimeLabel.gameObject.SetActive(false);
-        //GetDeviceType();
         statusBarHolder.GetComponent<Canvas>().sortingOrder = 500;
+        SetDeviceStatus();
     }
 
     void Update()
@@ -79,29 +79,41 @@ public class StatusBar : MonoBehaviour
         SetDate();
         SetBatteryPercent();
         SetBatteryState();
+        SetDeviceStatus(); // maybe its not a good idea to run this every frame but whatever
     }
 
-    // I'm going to scream. I have no fricking clue on why TOSSP6.deviceType is a static or whatever object.
-    // IT IS NOT. IT IS NOT REFFERED AS ONE ANYWHERE IN THE CODE. WHY ARE YOU COMPLAINING.
-    // This is most likely an Unity thing I don't understand but I've spent 2 hours trying to figure this out and I give up.
-    // No carrier/device name changing for you... (until theres some better method atp i  dont know . I DONT KNOW!!!!!!!!!!!!!!!!!!!!!!!!!!)
-    /*
-    private void GetDeviceType()
+    private void SetDeviceStatus()
     {
-        switch (TOSSP6.deviceType)
+        // theres probably a way better way to do this code but whatever
+        switch (main.deviceType)
         {
             case TOSSP6.idevice.iPhone:
-                deviceName.text = "No SIM";
+                if (main.isSIMInserted == true) {
+                    deviceName.text = "No Service";
+                    if (main.carrierName != "") {
+                        deviceName.text = main.carrierName;
+                    }
+                } else {
+                    // FIXME: on boot iOS 6 slowly fades between "No SIM" and "No Service" before settling on "No SIM". this will need to be added eventually
+                    deviceName.text = "No SIM";
+                }
                 break;
             case TOSSP6.idevice.iPod:
                 deviceName.text = "iPod";
                 break;
             case TOSSP6.idevice.iPad:
-                deviceName.text = "iPad";
+                if (main.isSIMInserted == true) {
+                    // NOTE: I don't know if iPads with celluar have the No SIM and No Service marking like iPhones if there's no sim inserted. Will have to test that eventually...
+                    deviceName.text = "No Service";
+                    if (main.carrierName != "") {
+                        deviceName.text = main.carrierName;
+                    }
+                } else {
+                    deviceName.text = "iPad";
+                }
                 break;
          }
     }
-    */
 
     private void CheckStatusBarSettings()
     {
