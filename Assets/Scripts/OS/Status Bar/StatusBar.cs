@@ -85,6 +85,8 @@ public class StatusBar : MonoBehaviour
     private void SetDeviceStatus()
     {
         // theres probably a way better way to do this code but whatever
+        deviceName.text = main.GetDeviceName();
+        // celluar check
         switch (main.deviceType)
         {
             case TOSSP6.idevice.iPhone:
@@ -98,9 +100,6 @@ public class StatusBar : MonoBehaviour
                     deviceName.text = "No SIM";
                 }
                 break;
-            case TOSSP6.idevice.iPod:
-                deviceName.text = "iPod";
-                break;
             case TOSSP6.idevice.iPad:
                 if (main.isSIMInserted == true) {
                     // NOTE: I don't know if iPads with celluar have the No SIM and No Service marking like iPhones if there's no sim inserted. Will have to test that eventually...
@@ -108,8 +107,6 @@ public class StatusBar : MonoBehaviour
                     if (main.carrierName != "") {
                         deviceName.text = main.carrierName;
                     }
-                } else {
-                    deviceName.text = "iPad";
                 }
                 break;
          }

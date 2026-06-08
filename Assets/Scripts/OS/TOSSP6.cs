@@ -615,4 +615,18 @@ public class TOSSP6 : MonoBehaviour
     {
         return volume = PlayerPrefs.GetFloat("System_Volume_SFX");
     }
+
+    public string GetDeviceName()
+    {
+        switch (deviceType)
+        {
+            case idevice.iPhone:
+                return "iPhone";
+            case idevice.iPod:
+                return "iPod";
+            case idevice.iPad:
+                return "iPad";
+        }
+        return "????";
+    }
 }
