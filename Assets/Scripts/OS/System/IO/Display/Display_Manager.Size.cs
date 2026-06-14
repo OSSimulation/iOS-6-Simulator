@@ -23,7 +23,7 @@ namespace OS6.IO.Displays
                     key.SetValue(executablePath, regKeyValue, RegistryValueKind.String);
                     UnityEngine.Debug.Log("Updated DPI Scaling Registry Value");
 
-                    Power_Manager.Reboot();
+                    powerManager.Reboot();
                 }
                 else
                 {

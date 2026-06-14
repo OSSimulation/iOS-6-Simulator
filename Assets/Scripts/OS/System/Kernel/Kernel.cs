@@ -1,6 +1,7 @@
 using OS6.IO.Audio;
 using OS6.IO.Displays;
 using OS6.Notifications;
+using OS6.Power;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
@@ -30,7 +31,6 @@ namespace OS6.Kernel
             instance = this;
             DontDestroyOnLoad(gameObject);
 
-            PlayerSettings.forceSingleInstance = true;
             Application.targetFrameRate = 60;
 
             Intitialise();
@@ -48,6 +48,7 @@ namespace OS6.Kernel
             System_Services.RegisterService(GetComponent<Audio_Manager>());
             System_Services.RegisterService(GetComponent<Display_Manager>());
             System_Services.RegisterService(GetComponent<Notification_Manager>());
+            System_Services.RegisterService(GetComponent<Power_Manager>());
 
             System_Services.RegisterService(GetComponent<MobileGestalt>());
 

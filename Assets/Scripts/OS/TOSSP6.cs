@@ -98,20 +98,20 @@ public class TOSSP6 : MonoBehaviour
 
     void Awake()
     {
-        //GameObject[] objs = GameObject.FindGameObjectsWithTag("TOSSP6");
-
-        //if (objs.Length > 1)
-        //{
-        //    Destroy(gameObject);
-        //}
-
-        //DontDestroyOnLoad(gameObject);
-
         SceneManager.sceneLoaded += OnSceneLoaded;
         LockScreen.BioAccept += StartUnlockSystem;
         Home_Layout.AppsLoaded += FirstBootLoadPageCall;
 
         GlobalEvents.Subscribe("BUTTON_POWER_PRESSED", LockSystem);
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        LockScreen.BioAccept -= StartUnlockSystem;
+        Home_Layout.AppsLoaded -= FirstBootLoadPageCall;
+
+        GlobalEvents.Unsubscribe("BUTTON_POWER_PRESSED", LockSystem);
     }
 
     private void FirstBootLoadPageCall()
@@ -268,7 +268,6 @@ public class TOSSP6 : MonoBehaviour
         }
 
         audioSource.PlayOneShot(systemSFX[(int)SystemSounds.UNLOCK]);
-        //soundManager.PlaySound(SoundEvents.SYSTEM_UNLOCK, volume, SoundSources.SYSTEM_SFX);
         DeviceUnlocked?.Invoke();
     }
 

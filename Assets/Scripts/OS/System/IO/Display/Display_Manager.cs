@@ -1,4 +1,6 @@
 using OS6.Events;
+using OS6.Kernel;
+using OS6.Power;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,12 +21,14 @@ namespace OS6.IO.Displays
 
         private float currentBrightness;
 
+        Power_Manager powerManager;
+
         private void OnEnable()
         {
             GlobalEvents.Subscribe("SYSTEM_DISPLAY_LOCKED", DisplayPowerOff);
             GlobalEvents.Subscribe("SYSTEM_DISPLAY_UNLOCKED", DisplayPowerOn);
 
-            brightnessTap.onClick.AddListener(() => GlobalEvents.PublishEventMessage("BUTTON_POWER_PRESSED"));
+            brightnessTap.onClick.AddListener(OnBrightnessTap);
         }
 
         private void OnDisable()
@@ -32,7 +36,17 @@ namespace OS6.IO.Displays
             GlobalEvents.Unsubscribe("SYSTEM_DISPLAY_LOCKED", DisplayPowerOff);
             GlobalEvents.Unsubscribe("SYSTEM_DISPLAY_UNLOCKED", DisplayPowerOn);
 
-            brightnessTap.onClick.RemoveListener(() => GlobalEvents.PublishEventMessage("BUTTON_POWER_PRESSED"));
+            brightnessTap.onClick.RemoveListener(OnBrightnessTap);
+        }
+
+        private void OnBrightnessTap()
+        {
+            GlobalEvents.PublishEventMessage("BUTTON_POWER_PRESSED");
+        }
+
+        private void Awake()
+        {
+            powerManager = System_Services.GetService<Power_Manager>();
         }
 
         private void Start()
