@@ -1,11 +1,12 @@
+using OS6.Kernel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class StatusBar : MonoBehaviour
 {
     [SerializeField] private TOSSP6 main;
+    private MobileGestalt mobileGestalt;
 
     //Status Bars
     [Space(10)]
@@ -63,14 +64,22 @@ public class StatusBar : MonoBehaviour
     [Header("Battery")]
     [SerializeField] private TMP_Text batteryPercentLabel;
 
-    void Start()
+    private void Awake()
     {
         TOSSP6.DeviceUnlocked += NormalBar;
         UI_NotificationCentre.ShowNotificationCentre += NotificationBar;
         UI_NotificationCentre.HideNotificationCentre += NormalBar;
+
         smallTimeLabel.gameObject.SetActive(false);
+
         statusBarHolder.GetComponent<Canvas>().sortingOrder = 500;
-        SetDeviceStatus();
+
+        mobileGestalt = System_Services.GetService<MobileGestalt>();
+    }
+
+    void Start()
+    {
+        SetCarrierText();
     }
 
     void Update()
@@ -79,48 +88,21 @@ public class StatusBar : MonoBehaviour
         SetDate();
         SetBatteryPercent();
         SetBatteryState();
-        SetDeviceStatus(); // maybe its not a good idea to run this every frame but whatever
     }
 
-    private void SetDeviceStatus()
+    private void SetCarrierText()
     {
-        // theres probably a way better way to do this code but whatever
-        deviceName.text = main.GetDeviceName();
-        // celluar check
-        switch (main.deviceType)
+        switch (mobileGestalt.DeviceType)
         {
-            case TOSSP6.idevice.iPhone:
-                if (main.isSIMInserted == true) {
-                    deviceName.text = "No Service";
-                    if (main.carrierName != "") {
-                        deviceName.text = main.carrierName;
-                    }
-                } else {
-                    // FIXME: on boot iOS 6 slowly fades between "No SIM" and "No Service" before settling on "No SIM". this will need to be added eventually
-                    deviceName.text = "No SIM";
-                }
+            case MobileGestalt.IDeviceType.iPhone:
+                deviceName.text = "No SIM";
                 break;
-            case TOSSP6.idevice.iPad:
-                if (main.isSIMInserted == true) {
-                    // NOTE: I don't know if iPads with celluar have the No SIM and No Service marking like iPhones if there's no sim inserted. Will have to test that eventually...
-                    deviceName.text = "No Service";
-                    if (main.carrierName != "") {
-                        deviceName.text = main.carrierName;
-                    }
-                }
+            case MobileGestalt.IDeviceType.iPad:
+                deviceName.text = "iPad";
                 break;
-         }
-    }
-
-    private void CheckStatusBarSettings()
-    {
-        if (PlayerPrefs.GetInt("TimeFormat") == 1)
-        {
-            is24HourTime = true;
-        }
-        else if (PlayerPrefs.GetInt("TimeFormat") == 0)
-        {
-            is24HourTime = false;
+            case MobileGestalt.IDeviceType.iPod:
+                deviceName.text = "iPod";
+                break;
         }
     }
 
@@ -153,51 +135,29 @@ public class StatusBar : MonoBehaviour
 
     public void SetBatteryState()
     {
-        if (SystemInfo.batteryStatus == BatteryStatus.NotCharging || SystemInfo.batteryStatus == BatteryStatus.Full)
+        var batteryStatus = SystemInfo.batteryStatus;
+
+        main.isSystemCharging = batteryStatus == BatteryStatus.Charging;
+        bool isSystemHolding = batteryStatus == BatteryStatus.NotCharging
+            || batteryStatus == BatteryStatus.Full
+            || batteryStatus == BatteryStatus.Unknown
+            || SystemInfo.batteryLevel == -1f;
+
+        batteryCharging.SetActive(main.isSystemCharging);
+        batteryNormal.SetActive(!main.isSystemCharging && !isSystemHolding);
+        batteryHold.SetActive(isSystemHolding);
+
+        if (batteryStatus == BatteryStatus.Discharging)
         {
-            batteryCharging.SetActive(false);
-            batteryNormal.SetActive(false);
-            batteryHold.SetActive(true);
-
-            main.isSystemCharging = true;
-
-            if (!hasChargingSoundPlayed)
-            {
-                main.soundManager.PlaySound(SoundEvents.SYSTEM_CHARGE, main.GetSFXVolume(), SoundSources.SYSTEM_SFX);
-                hasChargingSoundPlayed = true;
-            }
-        }
-        else if (SystemInfo.batteryStatus == BatteryStatus.Charging)
-        {
-            batteryCharging.SetActive(true);
-            batteryNormal.SetActive(false);
-            batteryHold.SetActive(false);
-
-            main.isSystemCharging = true;
-
-            if (!hasChargingSoundPlayed)
-            {
-                main.soundManager.PlaySound(SoundEvents.SYSTEM_CHARGE, main.GetSFXVolume(), SoundSources.SYSTEM_SFX);
-                hasChargingSoundPlayed = true;
-            }
-        }
-        else if (SystemInfo.batteryStatus == BatteryStatus.Unknown)
-        {
-            batteryCharging.SetActive(false);
-            batteryNormal.SetActive(false);
-            batteryHold.SetActive(true);
-
-            main.isSystemCharging = false;
-        }
-        else if (SystemInfo.batteryStatus == BatteryStatus.Discharging)
-        {
-            batteryCharging.SetActive(false);
-            batteryNormal.SetActive(true);
-            batteryHold.SetActive(false);
-
-            main.isSystemCharging = false;
-
             hasChargingSoundPlayed = false;
+        }
+        else if (main.isSystemCharging || isSystemHolding)
+        {
+            if (!hasChargingSoundPlayed)
+            {
+                main.audioSource.PlayOneShot(main.systemSFX[(int)SystemSounds.CHARGING]);
+                hasChargingSoundPlayed = true;
+            }
         }
     }
 

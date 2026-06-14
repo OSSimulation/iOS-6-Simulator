@@ -1,3 +1,4 @@
+using OS6.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +11,6 @@ public class TOSSP6 : MonoBehaviour
 {
     //System
     [Header("System")]
-    [SerializeField] private Settings settings;
     [SerializeField] private GameObject screenHolder;
     [SerializeField] private UI_NotificationCentre notificationCentre;
     [SerializeField] private Image wallpaper;
@@ -23,30 +23,20 @@ public class TOSSP6 : MonoBehaviour
     public bool isInNotificationCentre;
     public int maxPasscodeTries;
     public bool isSystemCharging;
-    public idevice deviceType;
-    public bool isSIMInserted;
-    public string carrierName;
-    public enum idevice
-    {
-        iPhone,
-        iPod,
-        iPad
-    }
 
     public static event Action DeviceUnlocked;
     public static event Action LockDevice;
-
-    //Sound
-    [Space(10)]
-    [Header("Sound")]
-    public SoundManager soundManager;
-    [SerializeField] private float volume;
-    public bool isSilentMode;
 
     //Status Bar
     [Space(10)]
     [Header("Status Bar")]
     [SerializeField] private StatusBar statusBar;
+
+    // Sounds
+    [Space(10)]
+    [Header("Sounds")]
+    public AudioSource audioSource;
+    public AudioClip[] systemSFX;
 
     //Home Button
     [Space(10)]
@@ -108,18 +98,20 @@ public class TOSSP6 : MonoBehaviour
 
     void Awake()
     {
-        GameObject[] objs = GameObject.FindGameObjectsWithTag("TOSSP6");
+        //GameObject[] objs = GameObject.FindGameObjectsWithTag("TOSSP6");
 
-        if (objs.Length > 1)
-        {
-            Destroy(gameObject);
-        }
+        //if (objs.Length > 1)
+        //{
+        //    Destroy(gameObject);
+        //}
 
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         LockScreen.BioAccept += StartUnlockSystem;
         Home_Layout.AppsLoaded += FirstBootLoadPageCall;
+
+        GlobalEvents.Subscribe("BUTTON_POWER_PRESSED", LockSystem);
     }
 
     private void FirstBootLoadPageCall()
@@ -147,7 +139,7 @@ public class TOSSP6 : MonoBehaviour
         Application.targetFrameRate = 60;
         LockScreen.BioAccept += StartUnlockSystem;
 
-        Debug.Log(SystemInfo.operatingSystem);
+        Debug.Log("[OS6/SpringBoard]: Host Information - " + SystemInfo.operatingSystem);
 
         CloseLockMediaCentre();
 
@@ -156,9 +148,6 @@ public class TOSSP6 : MonoBehaviour
 
     void Update()
     {
-        SetSilentMode();
-        GetSFXVolume();
-
         HomeButton();
         PowerButton();
 
@@ -278,7 +267,8 @@ public class TOSSP6 : MonoBehaviour
             ShowApp(currentOpenApp);
         }
 
-        soundManager.PlaySound(SoundEvents.SYSTEM_UNLOCK, volume, SoundSources.SYSTEM_SFX);
+        audioSource.PlayOneShot(systemSFX[(int)SystemSounds.UNLOCK]);
+        //soundManager.PlaySound(SoundEvents.SYSTEM_UNLOCK, volume, SoundSources.SYSTEM_SFX);
         DeviceUnlocked?.Invoke();
     }
 
@@ -291,7 +281,7 @@ public class TOSSP6 : MonoBehaviour
             isHomeScreen = false;
             isDisplayOff = true;
 
-            soundManager.PlaySound(SoundEvents.SYSTEM_LOCK, volume, SoundSources.SYSTEM_SFX);
+            audioSource.PlayOneShot(systemSFX[(int)SystemSounds.LOCK]);
 
             if (isHomeScreen)
             {
@@ -330,7 +320,7 @@ public class TOSSP6 : MonoBehaviour
             isHomeScreen = false;
             isDisplayOff = true;
 
-            soundManager.PlaySound(SoundEvents.SYSTEM_LOCK, volume, SoundSources.SYSTEM_SFX);
+            audioSource.PlayOneShot(systemSFX[(int)SystemSounds.LOCK]);
 
             LockDisplay();
         }
@@ -353,22 +343,22 @@ public class TOSSP6 : MonoBehaviour
     {
         GetComponent<Canvas>().sortingLayerName = "Main";
         GetComponent<Canvas>().sortingOrder = 9999;
-        brightnessObject.gameObject.SetActive(true);
-        brightnessObject.GetComponent<Image>().raycastTarget = true;
+
         LockDevice?.Invoke();
         screenHolder.GetComponent<Screen_Anim>().ScreenLower();
         statusBar.LockBar();
         HideHomeScreen(0);
         HideApp(currentOpenApp);
+
+        GlobalEvents.PublishEventMessage("SYSTEM_DISPLAY_LOCKED");
     }
 
     private void UnlockDisplay()
     {
-        brightnessObject.gameObject.SetActive(false);
-        brightnessObject.GetComponent<Image>().raycastTarget = false;
-
         GetComponent<Canvas>().sortingLayerName = "Main";
         GetComponent<Canvas>().sortingOrder = 499;
+
+        GlobalEvents.PublishEventMessage("SYSTEM_DISPLAY_UNLOCKED");
     }
 
     public void HomeButton()
@@ -442,7 +432,8 @@ public class TOSSP6 : MonoBehaviour
         {
             powerPressed = false;
             powerSinglePress = false;
-            LockSystem();
+            //LockSystem();
+            GlobalEvents.PublishEventMessage("BUTTON_POWER_PRESSED");
         }
     }
 
@@ -600,33 +591,11 @@ public class TOSSP6 : MonoBehaviour
             }
         }
     }
+}
 
-    private void SetSilentMode()
-    {
-        if (Input.GetKeyDown(KeyCode.BackQuote))
-        {
-            isSilentMode = !isSilentMode;
-            soundManager.PlaySound(SoundEvents.SYSTEM_RINGER_CHANGED, volume, SoundSources.SYSTEM_SFX);
-            settings.SetRinger(isSilentMode);
-        }
-    }
-
-    public float GetSFXVolume()
-    {
-        return volume = PlayerPrefs.GetFloat("System_Volume_SFX");
-    }
-
-    public string GetDeviceName()
-    {
-        switch (deviceType)
-        {
-            case idevice.iPhone:
-                return "iPhone";
-            case idevice.iPod:
-                return "iPod";
-            case idevice.iPad:
-                return "iPad";
-        }
-        return "????";
-    }
+public enum SystemSounds
+{
+    LOCK,
+    UNLOCK,
+    CHARGING
 }

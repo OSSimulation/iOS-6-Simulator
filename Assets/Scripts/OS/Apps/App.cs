@@ -1,3 +1,5 @@
+using OS6.Kernel;
+using OS6.Notifications;
 using System;
 using System.Collections;
 using TMPro;
@@ -8,6 +10,8 @@ using UnityEngine.UI;
 public class App : MonoBehaviour
 {
     public static event Action AppOpened;
+
+    private Notification_Manager NotificationManager => System_Services.GetService<Notification_Manager>();
 
     private TOSSP6 main;
     public AppObject app;
@@ -24,10 +28,10 @@ public class App : MonoBehaviour
     private void Start()
     {
         image = gameObject.GetComponent<Image>();
-        image.sprite = app.appIcon;
+        image.sprite = app.AppIcon;
 
         appName = gameObject.GetComponentInChildren<TMP_Text>();
-        appName.text = app.appName;
+        appName.text = app.AppName;
 
         if (appName.text == "Calendar")
         {
@@ -38,10 +42,13 @@ public class App : MonoBehaviour
 
     public void OpenApp()
     {
-        // Add an alert to say the app cant be opened if there is no valid scene
-        if (!SceneManager.GetSceneByName(app.sceneName).IsValid()) return;
-
         if (main.isWiggleMode || main.isSwitcherWiggleMode) return;
+
+        if (!SceneManager.GetSceneByName(app.SceneName).IsValid())
+        {
+            NotificationManager.CreateAlertSingle("Unable To Open App", "Apps have not been developed for the iOS 6 Simulator yet.", "OK");
+            return;
+        }
 
         if (!main.openApps.Contains(app))
         {
@@ -55,14 +62,14 @@ public class App : MonoBehaviour
 
         if (main.isHomeScreen)
         {
-            if (!SceneManager.GetSceneByName(app.sceneName).isLoaded)
+            if (!SceneManager.GetSceneByName(app.SceneName).isLoaded)
             {
-                SceneManager.LoadScene(app.sceneName, LoadSceneMode.Additive);
+                SceneManager.LoadScene(app.SceneName, LoadSceneMode.Additive);
             }
 
-            if (main.openAppHolder.ContainsKey(app.sceneName))
+            if (main.openAppHolder.ContainsKey(app.SceneName))
             {
-                GameObject currentAppHolder = main.openAppHolder[app.sceneName];
+                GameObject currentAppHolder = main.openAppHolder[app.SceneName];
 
                 if (currentAppHolder != null)
                 {
@@ -75,21 +82,21 @@ public class App : MonoBehaviour
                 string sceneName = entry.Key;
                 GameObject appHolder = entry.Value;
 
-                if (appHolder != null && sceneName != app.sceneName)
+                if (appHolder != null && sceneName != app.SceneName)
                 {
                     appHolder.SetActive(false);
                 }
             }
 
-            if (main.currentOpenApp != app.sceneName)
+            if (main.currentOpenApp != app.SceneName)
             {
                 main.previousOpenApp = main.currentOpenApp;
             }
 
-            main.currentOpenApp = app.sceneName;
+            main.currentOpenApp = app.SceneName;
 
             main.HideHomeScreen();
-            main.ShowApp(app.sceneName);
+            main.ShowApp(app.SceneName);
 
             main.isInApp = true;
             main.isHomeScreen = false;
@@ -97,7 +104,7 @@ public class App : MonoBehaviour
             AppOpened?.Invoke();
             return;
         }
-        else if (main.isInApp && main.currentOpenApp != app.sceneName)
+        else if (main.isInApp && main.currentOpenApp != app.SceneName)
         {
             StartCoroutine(SwitchApp());
             return;
@@ -111,12 +118,12 @@ public class App : MonoBehaviour
 
         main.isSwitchingApp = true;
 
-        if (main.currentOpenApp != app.sceneName)
+        if (main.currentOpenApp != app.SceneName)
         {
             main.previousOpenApp = main.currentOpenApp;
         }
 
-        main.currentOpenApp = app.sceneName;
+        main.currentOpenApp = app.SceneName;
 
         main.openAppHolder[main.currentOpenApp].GetComponent<Object_State>().Activate();
         main.openAppHolder[main.currentOpenApp].GetComponent<App_Anim>().Cancel();

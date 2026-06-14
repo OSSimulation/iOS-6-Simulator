@@ -112,12 +112,17 @@ public class LockScreen : MonoBehaviour
     public void ResetLockScreen()
     {
         //anim.Play("Lock_Screen_Reset");
+        LeanTween.cancel(batteryUIGO);
+        LeanTween.cancel(bottomGO);
+        LeanTween.cancel(interactablesGO);
+        LeanTween.cancel(mediaControlGO);
+        LeanTween.cancel(topGO);
 
         LeanTween.moveLocalY(topGO, 0, 0);
         LeanTween.moveLocalY(mediaControlGO, 0, 0);
         LeanTween.moveLocalY(bottomGO, 0, 0);
 
-        LeanTween.alphaCanvas(batteryUIGO.GetComponent<CanvasGroup>(), 1, 0);
+        LeanTween.alphaCanvas(batteryUIGO.GetComponent<CanvasGroup>(), 1f, 0);
 
         LeanTween.moveLocalY(bottomGO, 0, 0);
         LeanTween.moveLocalX(interactablesGO, 0, 0);

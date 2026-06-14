@@ -1,0 +1,16 @@
+﻿{
+  "global": {
+    "isSilentMode": false
+  },
+  "output": {
+    "General": {
+      "volume": 0.0
+    },
+    "Ringer": {
+      "volume": 0.0
+    },
+    "Assistant": {
+      "volume": 0.0
+    }
+  }
+}

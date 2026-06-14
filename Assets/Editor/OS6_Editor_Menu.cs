@@ -34,7 +34,7 @@ public class OS6_Editor_Menu : MonoBehaviour
     [MenuItem("OS6/Filesystem Locations/Open Photos Folder...", priority = 11)]
     static void OpenUserPhotos()
     {
-        Process.Start(Path.Combine(Application.persistentDataPath, System_Locations.USER_IMAGES));
+        Process.Start(Path.Combine(Application.persistentDataPath, System_Locations.USER_MEDIA));
     }
 
     [MenuItem("OS6/Filesystem Locations/Open Wallpapers Folder...", priority = 11)]

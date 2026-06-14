@@ -32,12 +32,12 @@ public class App_ForceQuit : MonoBehaviour
 
     public void ForceQuitApp()
     {
-        SceneManager.UnloadSceneAsync(app.app.sceneName);
+        SceneManager.UnloadSceneAsync(app.app.SceneName);
 
         LeanTween.scale(gameObject, new Vector3(0, 0, 0), 0.45f).setEase(LeanTweenType.easeOutQuint).setOnComplete(() =>
         {
             os.openApps.Remove(app.app);
-            os.openAppHolder.Remove(app.app.sceneName);
+            os.openAppHolder.Remove(app.app.SceneName);
             Destroy(gameObject);
         });
 

@@ -1,3 +1,4 @@
+using OS6.Events;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -5,15 +6,18 @@ using UnityEngine.EventSystems;
 
 public class SlideToUnlock : MonoBehaviour, IDragHandler, IEndDragHandler
 {
-    public static event Action SliderMovedToEnd;
+    //public static event Action SliderMovedToEnd;
 
-    [SerializeField] private GameObject startGO;
-    [SerializeField] private GameObject endGO;
-
-    [SerializeField] private LockScreen ls;
+    [Space(10)]
+    [SerializeField] private RectTransform startGO;
+    [SerializeField] private RectTransform endGO;
+    [SerializeField] private RectTransform handle;
+    [SerializeField] private bool shouldReset;
 
     float start;
     float end;
+
+    public static Action SliderMovedToEnd;
 
     private void Start()
     {
@@ -21,51 +25,54 @@ public class SlideToUnlock : MonoBehaviour, IDragHandler, IEndDragHandler
         LockScreen.BioReject += ResetSlider;
     }
 
-    private void Update()
+    private void OnRectTransformDimensionsChange()
     {
-        start = startGO.transform.localPosition.x + 62f;
-        end = endGO.transform.localPosition.x - 62f;
+        start = startGO.localPosition.x + (handle.rect.width / 2f);
+        end = endGO.localPosition.x - (handle.rect.width / 2f);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Vector3 position = transform.localPosition;
-        transform.localPosition = new Vector3(Mathf.Clamp(position.x + eventData.delta.x, start, end), position.y, position.z);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(handle.parent as RectTransform,
+            eventData.position, eventData.pressEventCamera, out Vector2 position);
+
+        float x = Mathf.Clamp(position.x + eventData.delta.x, start, end);
+        handle.localPosition = new Vector2(x, handle.localPosition.y);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Vector3 position = transform.localPosition;
+        Vector2 position = transform.localPosition;
 
-        if (position.x < end && position.x > start - 1f)
+        if (position.x == end)
         {
-            StartCoroutine(SmoothReset());
+            GlobalEvents.PublishEventMessage("LSSLIDER_MOVED_TO_END");
+
+            SliderMovedToEnd?.Invoke();
+            StartCoroutine(ResetDelay());
             return;
         }
 
-        SliderMovedToEnd?.Invoke();
+        SmoothReset();
+        return;
+    }
+
+    private IEnumerator ResetDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        ResetSlider();
     }
 
     private void ResetSlider()
     {
-        Vector3 position = transform.localPosition;
-        transform.localPosition = new Vector3(start, position.y, position.z);
+        if (!shouldReset) return;
+
+        Vector2 position = transform.localPosition;
+        transform.localPosition = new Vector3(start, position.y);
     }
 
-    private IEnumerator SmoothReset()
+    private void SmoothReset()
     {
-        Vector2 startPos = transform.localPosition;
-        Vector2 targetPos = new Vector2(start, startPos.y);
-        float elapsedTime = 0;
-        float duration = 0.1f;
-
-        while (elapsedTime < duration)
-        {
-            transform.localPosition = Vector2.Lerp(startPos, targetPos, elapsedTime / duration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.localPosition = targetPos;
+        LeanTween.moveLocalX(gameObject, start, 0.1f);
     }
 }

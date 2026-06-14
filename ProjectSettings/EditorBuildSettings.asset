@@ -7,10 +7,10 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/Boot.unity
-    guid: 70dd8e7f0fb456042b8912aa93580b80
+    guid: 33ff7e730d0a81b469f3a2fdbac12f83
   - enabled: 1
     path: Assets/Scenes/Springboard.unity
-    guid: 70c5c49250bb412428dbb53a05152178
+    guid: 274b02807af6e25498b63f199fb2c07e
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 1a4a23fe6fcaf46f286e2f5954f3e153, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 59b8c8acfaa6e45a7a14b545b07014da, type: 2}
