@@ -1,23 +1,39 @@
-## Notes
-- ***THIS IS NOT AN EMULATOR AND DOES NOT RUN IPAs!*** For an actual iOS emulator, see [TouchHLE](https://github.com/touchHLE/touchHLE) or [qemu-ios](https://github.com/devos50/qemu-ios).
-- This is currently the latest branch. The springboard branch has been merged.
-- This project is NOT official in any way, shape or form... If it wasn't insanely obvious already.
 # iOS 6 Simulator
-iOS 6 Simulator is a work-in-progress recreation of iOS 6 in the Unity Engine. [You can see the current progress here](https://github.com/orgs/OSSimulation/projects/1).
-### Keybinds
+
+The iOS 6 Simulator is a work-in-progress recreation of Apple's iOS 6 in the Unity Engine. [You can see the current progress here](https://github.com/orgs/OSSimulation/projects/1).
+
+> [!IMPORTANT]
+> **THIS IS NOT AN EMULATOR AND DOES NOT RUN IPAs!** For an actual iOS emulator, see [TouchHLE](https://github.com/touchHLE/touchHLE) or [qemu-ios](https://github.com/devos50/qemu-ios).
+
+## Keybinds
+
 - Backspace - Sleep/Wake Button
 - Spacebar - Home Button
 - Minus - Volume Down
 - Plus - Volume Up
-- Backtick - Ring/Silent Button
+- Backtick (`) - Ring/Silent Button
+
+> [!NOTE]
+> Keybinds will be replaced by AssistiveTouch. However, a non-conflicting set of keybinds will eventually be available as an option in the Settings app once it has been developed.
+
 ## Authors
+
 - [@Tailspin96](https://github.com/tailspin96)
 - [@Tamasina07](https://github.com/tamasina07)
+
 ## Build Info
-This project uses Unity version 2021.3.45f2. You also need Windows, macOS and Linux build support installed in order for the project to build properly.
+
+This project uses Unity version 2021.3.45f2. You also need Windows, macOS, and Linux build support installed in order for the project to build properly.
+
 ### Supported Operating Systems
+
 - Windows 7 Service Pack 1 - Windows 11 (x86, x86-64)
 - Mac OS X High Sierra 10.13 - macOS Tahoe (x86-64, aarch64)
-- Linux (x86-64 only, Tested on Linux Mint 22 and Debian 13, YMMV.)
+- Linux (x86-64 only, tested on Linux Mint 22 and Debian 13, YMMV.)
 
-Anything not listed is not supported at the moment. Proper iOS and Android support will come eventually. eta wen???? eta someday...
+Anything not listed is not supported at the moment. Proper iOS and Android support will come eventually. ETA when???? ETA someday...
+
+## Notes
+
+- This is currently the latest branch. The SpringBoard branch has been merged.
+- This project is NOT official in any way, shape, or form... If it wasn't insanely obvious already.
