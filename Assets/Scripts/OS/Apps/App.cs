@@ -9,135 +9,135 @@ using UnityEngine.UI;
 
 public class App : MonoBehaviour
 {
-    public static event Action AppOpened;
+	public static event Action AppOpened;
 
-    private Notification_Manager NotificationManager => System_Services.GetService<Notification_Manager>();
+	private Notification_Manager NotificationManager => System_Services.GetService<Notification_Manager>();
 
-    private TOSSP6 main;
-    public AppObject app;
+	private TOSSP6 main;
+	public AppObject app;
 
-    Image image;
-    TMP_Text appName;
+	Image image;
+	TMP_Text appName;
 
-    private void Awake()
-    {
-        GameObject OS = GameObject.FindGameObjectWithTag("TOSSP6");
-        main = OS.GetComponent<TOSSP6>();
-    }
+	private void Awake()
+	{
+		GameObject OS = GameObject.FindGameObjectWithTag("TOSSP6");
+		main = OS.GetComponent<TOSSP6>();
+	}
 
-    private void Start()
-    {
-        image = gameObject.GetComponent<Image>();
-        image.sprite = app.AppIcon;
+	private void Start()
+	{
+		image = gameObject.GetComponent<Image>();
+		image.sprite = app.AppIcon;
 
-        appName = gameObject.GetComponentInChildren<TMP_Text>();
-        appName.text = app.AppName;
+		appName = gameObject.GetComponentInChildren<TMP_Text>();
+		appName.text = app.AppName;
 
-        if (appName.text == "Calendar")
-        {
-            Instantiate(main.calendarDateText, transform);
-            Instantiate(main.calendarDayText, transform);
-        }
-    }
+		if (appName.text == "Calendar")
+		{
+			Instantiate(main.calendarDateText, transform);
+			Instantiate(main.calendarDayText, transform);
+		}
+	}
 
-    public void OpenApp()
-    {
-        if (main.isWiggleMode || main.isSwitcherWiggleMode) return;
+	public void OpenApp()
+	{
+		if (main.isWiggleMode || main.isSwitcherWiggleMode) return;
 
-        if (!SceneManager.GetSceneByName(app.SceneName).IsValid())
-        {
-            NotificationManager.CreateAlertSingle("Unable To Open App", "Apps have not been developed for the iOS 6 Simulator yet.", "OK");
-            return;
-        }
+		if (!SceneManager.GetSceneByName(app.SceneName).IsValid())
+		{
+			NotificationManager.CreateAlertSingle("Unable To Open App", "Apps have not been developed for the iOS 6 Simulator yet.", "OK");
+			return;
+		}
 
-        if (!main.openApps.Contains(app))
-        {
-            main.openApps.Insert(0, app);
-        }
-        else if (main.openApps.Contains(app))
-        {
-            main.openApps.Remove(app);
-            main.openApps.Insert(0, app);
-        }
+		if (!main.openApps.Contains(app))
+		{
+			main.openApps.Insert(0, app);
+		}
+		else if (main.openApps.Contains(app))
+		{
+			main.openApps.Remove(app);
+			main.openApps.Insert(0, app);
+		}
 
-        if (main.isHomeScreen)
-        {
-            if (!SceneManager.GetSceneByName(app.SceneName).isLoaded)
-            {
-                SceneManager.LoadScene(app.SceneName, LoadSceneMode.Additive);
-            }
+		if (main.isHomeScreen)
+		{
+			if (!SceneManager.GetSceneByName(app.SceneName).isLoaded)
+			{
+				SceneManager.LoadScene(app.SceneName, LoadSceneMode.Additive);
+			}
 
-            if (main.openAppHolder.ContainsKey(app.SceneName))
-            {
-                GameObject currentAppHolder = main.openAppHolder[app.SceneName];
+			if (main.openAppHolder.ContainsKey(app.SceneName))
+			{
+				GameObject currentAppHolder = main.openAppHolder[app.SceneName];
 
-                if (currentAppHolder != null)
-                {
-                    currentAppHolder.SetActive(true);
-                }
-            }
+				if (currentAppHolder != null)
+				{
+					currentAppHolder.SetActive(true);
+				}
+			}
 
-            foreach (var entry in main.openAppHolder)
-            {
-                string sceneName = entry.Key;
-                GameObject appHolder = entry.Value;
+			foreach (var entry in main.openAppHolder)
+			{
+				string sceneName = entry.Key;
+				GameObject appHolder = entry.Value;
 
-                if (appHolder != null && sceneName != app.SceneName)
-                {
-                    appHolder.SetActive(false);
-                }
-            }
+				if (appHolder != null && sceneName != app.SceneName)
+				{
+					appHolder.SetActive(false);
+				}
+			}
 
-            if (main.currentOpenApp != app.SceneName)
-            {
-                main.previousOpenApp = main.currentOpenApp;
-            }
+			if (main.currentOpenApp != app.SceneName)
+			{
+				main.previousOpenApp = main.currentOpenApp;
+			}
 
-            main.currentOpenApp = app.SceneName;
+			main.currentOpenApp = app.SceneName;
 
-            main.HideHomeScreen();
-            main.ShowApp(app.SceneName);
+			main.HideHomeScreen();
+			main.ShowApp(app.SceneName);
 
-            main.isInApp = true;
-            main.isHomeScreen = false;
+			main.isInApp = true;
+			main.isHomeScreen = false;
 
-            AppOpened?.Invoke();
-            return;
-        }
-        else if (main.isInApp && main.currentOpenApp != app.SceneName)
-        {
-            StartCoroutine(SwitchApp());
-            return;
-        }
-    }
+			AppOpened?.Invoke();
+			return;
+		}
+		else if (main.isInApp && main.currentOpenApp != app.SceneName)
+		{
+			StartCoroutine(SwitchApp());
+			return;
+		}
+	}
 
-    private IEnumerator SwitchApp()
-    {
-        StartCoroutine(main.CloseAppSwitcher());
-        yield return new WaitForSeconds(0.5f);
+	private IEnumerator SwitchApp()
+	{
+		StartCoroutine(main.CloseAppSwitcher());
+		yield return new WaitForSeconds(0.5f);
 
-        main.isSwitchingApp = true;
+		main.isSwitchingApp = true;
 
-        if (main.currentOpenApp != app.SceneName)
-        {
-            main.previousOpenApp = main.currentOpenApp;
-        }
+		if (main.currentOpenApp != app.SceneName)
+		{
+			main.previousOpenApp = main.currentOpenApp;
+		}
 
-        main.currentOpenApp = app.SceneName;
+		main.currentOpenApp = app.SceneName;
 
-        main.openAppHolder[main.currentOpenApp].GetComponent<Object_State>().Activate();
-        main.openAppHolder[main.currentOpenApp].GetComponent<App_Anim>().Cancel();
-        main.openAppHolder[main.currentOpenApp].GetComponent<App_Anim>().AppSwitchIn();
-        main.openAppHolder[main.previousOpenApp].GetComponent<App_Anim>().AppSwitchOut();
+		main.openAppHolder[main.currentOpenApp].GetComponent<Object_State>().Activate();
+		main.openAppHolder[main.currentOpenApp].GetComponent<App_Anim>().Cancel();
+		main.openAppHolder[main.currentOpenApp].GetComponent<App_Anim>().AppSwitchIn();
+		main.openAppHolder[main.previousOpenApp].GetComponent<App_Anim>().AppSwitchOut();
 
-        yield return new WaitForSeconds(0.25f);
+		yield return new WaitForSeconds(0.25f);
 
-        main.openAppHolder[main.currentOpenApp].GetComponentInParent<Canvas>().sortingOrder = 200;
-        main.openAppHolder[main.previousOpenApp].GetComponentInParent<Canvas>().sortingOrder = 0;
+		main.openAppHolder[main.currentOpenApp].GetComponentInParent<Canvas>().sortingOrder = 200;
+		main.openAppHolder[main.previousOpenApp].GetComponentInParent<Canvas>().sortingOrder = 0;
 
-        yield return new WaitForSeconds(0.75f);
+		yield return new WaitForSeconds(0.75f);
 
-        main.openAppHolder[main.previousOpenApp].GetComponent<Object_State>().Deactivate();
-        main.isSwitchingApp = false;
-    }
+		main.openAppHolder[main.previousOpenApp].GetComponent<Object_State>().Deactivate();
+		main.isSwitchingApp = false;
+	}
 }

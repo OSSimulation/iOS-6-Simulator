@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Spotlight : MonoBehaviour
 {
-    [SerializeField] private TMP_Text placeholderText;
+	[SerializeField] private TMP_Text placeholderText;
 
-    MobileGestalt mobileGestalt;
+	MobileGestalt mobileGestalt;
 
-    private void Awake()
-    {
-        mobileGestalt = System_Services.GetService<MobileGestalt>();
-    }
+	private void Awake()
+	{
+		mobileGestalt = System_Services.GetService<MobileGestalt>();
+	}
 
-    private void Start()
-    {
-        placeholderText.text = "Search " + mobileGestalt.DeviceType;
-    }
+	private void Start()
+	{
+		placeholderText.text = "Search " + mobileGestalt.DeviceType;
+	}
 }

@@ -1,137 +1,60 @@
-name: Automatic Build
-
-on: [push, pull_request]
-
+name: Automatic Builds
+on:
+    push:
+        branches:
+            - main
+            - master
+        paths-ignore:
+            - "**.md"
+            - docs/**
+    pull_request:
+        branches:
+            - main
+            - master
+        paths-ignore:
+            - "**.md"
+            - docs/**
 jobs:
-  buildForWin32:
-    name: Win32 Build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        unityVersion:
-          - 2021.3.45f2
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
-            
-      - name: Build project
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          targetPlatform: StandaloneWindows
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Windows (x86)
-          path: build
-  buildForWin64:
-    name: Win64 Build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        unityVersion:
-          - 2021.3.45f2
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
-            
-      - name: Build project
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          targetPlatform: StandaloneWindows64
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Windows (x86-64)
-          path: build
-  buildForOSX:
-    name: OSX Build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        unityVersion:
-          - 2021.3.45f2
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
-            
-      - name: Build project
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          targetPlatform: StandaloneOSX
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Mac OS X (Universal)
-          path: build
-  buildForLinux:
-    name: Linux Build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        unityVersion:
-          - 2021.3.45f2
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
-            
-      - name: Build project
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          targetPlatform: StandaloneLinux64
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Linux (x86-64)
-          path: build
+    build:
+        name: "Build for ${{ matrix.artifactName }}"
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                unityVersion:
+                    - 2021.3.45f2
+                include:
+                    - targetPlatform: StandaloneWindows
+                      artifactName: Windows (x86)
+                    - targetPlatform: StandaloneWindows64
+                      artifactName: Windows (x86-64)
+                    - targetPlatform: StandaloneOSX
+                      artifactName: Mac OS X (Universal)
+                    - targetPlatform: StandaloneLinux64
+                      artifactName: Linux (x86-64)
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+            - name: Cache Unity Library
+              uses: actions/cache@v4
+              with:
+                  path: Library
+                  key: >-
+                      Library-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**',
+                      'Packages/**', 'ProjectSettings/**') }}
+                  restore-keys: |
+                      Library-${{ matrix.targetPlatform }}-
+            - name: Build Project
+              uses: game-ci/unity-builder@v4
+              env:
+                  UNITY_LICENSE: "${{ secrets.UNITY_LICENSE }}"
+                  UNITY_EMAIL: "${{ secrets.UNITY_EMAIL }}"
+                  UNITY_PASSWORD: "${{ secrets.UNITY_PASSWORD }}"
+              with:
+                  targetPlatform: "${{ matrix.targetPlatform }}"
+                  unityVersion: "${{ matrix.unityVersion }}"
+                  buildName: "iOS 6 Simulator"
+            - name: Upload Build Artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: "${{ matrix.artifactName }}"
+                  path: build

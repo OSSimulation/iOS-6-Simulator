@@ -6,185 +6,185 @@ using UnityEngine.EventSystems;
 
 public class PageTurner_Home : MonoBehaviour, IDragHandler, IEndDragHandler
 {
-    TOSSP6 main;
+	TOSSP6 main;
 
-    private Vector3 panelLocation;
-    [SerializeField] private float percentThreshold = 0.25f;
-    [SerializeField] private int totalPages;
-    public Transform[] pageObjects => pages.ToArray();
-    public List<Transform> pages = new();
-    public int currentPage = 1;
+	private Vector3 panelLocation;
+	[SerializeField] private float percentThreshold = 0.25f;
+	[SerializeField] private int totalPages;
+	public Transform[] pageObjects => pages.ToArray();
+	public List<Transform> pages = new();
+	public int currentPage = 1;
 
-    public static event Action WiggleEmptyPage;
+	public static event Action WiggleEmptyPage;
 
-    private void Start()
-    {
-        TOSSP6.DeviceUnlocked += PlayZoom;
-        App.AppOpened += PlayZoomOut;
-        Home_Layout.AppsLoaded += AddPages;
-        Home_Layout.AppsOverflow += AddPagesAfterLoad;
-        TOSSP6.WiggleStop += RebuildPageCaller;
+	private void Start()
+	{
+		TOSSP6.DeviceUnlocked += PlayZoom;
+		App.AppOpened += PlayZoomOut;
+		Home_Layout.AppsLoaded += AddPages;
+		Home_Layout.AppsOverflow += AddPagesAfterLoad;
+		TOSSP6.WiggleStop += RebuildPageCaller;
 
-        main = GetComponentInParent<TOSSP6>();
+		main = GetComponentInParent<TOSSP6>();
 
-        panelLocation = transform.position;
-    }
+		panelLocation = transform.position;
+	}
 
-    private void AddPages()
-    {
-        foreach (Transform child in transform)
-        {
-            pages.Add(child);
-        }
+	private void AddPages()
+	{
+		foreach (Transform child in transform)
+		{
+			pages.Add(child);
+		}
 
-        pages[0].transform.localPosition = new Vector2(-640, 0);
+		pages[0].transform.localPosition = new Vector2(-640, 0);
 
-        float xPos = 0;
+		float xPos = 0;
 
-        for (int i = 1; i < pages.Count; i++)
-        {
-            pages[i].transform.localPosition = new Vector2(xPos, 0);
-            xPos += 640;
-        }
+		for (int i = 1; i < pages.Count; i++)
+		{
+			pages[i].transform.localPosition = new Vector2(xPos, 0);
+			xPos += 640;
+		}
 
-        totalPages = transform.childCount;
-    }
+		totalPages = transform.childCount;
+	}
 
-    private void AddPagesAfterLoad()
-    {
-        Transform page = transform.GetChild(transform.childCount - 1);
-        page.localPosition = new Vector2(pageObjects[totalPages - 1].transform.localPosition.x + 640, 0f);
+	private void AddPagesAfterLoad()
+	{
+		Transform page = transform.GetChild(transform.childCount - 1);
+		page.localPosition = new Vector2(pageObjects[totalPages - 1].transform.localPosition.x + 640, 0f);
 
-        pages.Add(page);
-        totalPages = transform.childCount;
-    }
+		pages.Add(page);
+		totalPages = transform.childCount;
+	}
 
-    private void RebuildPageCaller()
-    {
-        StartCoroutine(RebuildPageList());
-    }
+	private void RebuildPageCaller()
+	{
+		StartCoroutine(RebuildPageList());
+	}
 
-    IEnumerator RebuildPageList()
-    {
-        yield return new WaitForSeconds(0.5f);
+	IEnumerator RebuildPageList()
+	{
+		yield return new WaitForSeconds(0.5f);
 
-        pages.Clear();
+		pages.Clear();
 
-        foreach (Transform child in transform)
-        {
-            pages.Add(child);
-        }
+		foreach (Transform child in transform)
+		{
+			pages.Add(child);
+		}
 
-        totalPages = transform.childCount;
-    }
+		totalPages = transform.childCount;
+	}
 
-    private void Update()
-    {
-        if (main.isWiggleMode)
-        {
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                NextPage();
-            }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                PreviousPage();
-            }
-        }
-    }
+	private void Update()
+	{
+		if (main.isWiggleMode)
+		{
+			if (Input.GetKeyDown(KeyCode.RightArrow))
+			{
+				NextPage();
+			}
+			else if (Input.GetKeyDown(KeyCode.LeftArrow))
+			{
+				PreviousPage();
+			}
+		}
+	}
 
-    private void NextPage()
-    {
-        if (currentPage < pages.Count)
-        {
-            GoToPage(currentPage + 1);
-        }
-        else if (currentPage == pages.Count && !pages[currentPage - 1].GetComponent<Home_Page>().isEmpty)
-        {
-            WiggleEmptyPage?.Invoke();
+	private void NextPage()
+	{
+		if (currentPage < pages.Count)
+		{
+			GoToPage(currentPage + 1);
+		}
+		else if (currentPage == pages.Count && !pages[currentPage - 1].GetComponent<Home_Page>().isEmpty)
+		{
+			WiggleEmptyPage?.Invoke();
 
-            GoToPage(currentPage + 1);
-        }
-    }
+			GoToPage(currentPage + 1);
+		}
+	}
 
-    private void PreviousPage()
-    {
-        if (currentPage != 2)
-        {
-            GoToPage(currentPage - 1);
-        }
-    }
+	private void PreviousPage()
+	{
+		if (currentPage != 2)
+		{
+			GoToPage(currentPage - 1);
+		}
+	}
 
-    public void OnDrag(PointerEventData data)
-    {
-        if (pageObjects.Length > 1)
-        {
-            float difference = data.pressPosition.x - data.position.x;
-            transform.position = panelLocation - new Vector3(difference, 0, 0);
+	public void OnDrag(PointerEventData data)
+	{
+		if (pageObjects.Length > 1)
+		{
+			float difference = data.pressPosition.x - data.position.x;
+			transform.position = panelLocation - new Vector3(difference, 0, 0);
 
-            if (difference < 0 && currentPage == 2 && main.isWiggleMode)
-            {
-                data.dragging = false;
-                GoToPage(2);
-            }
-        }
-    }
+			if (difference < 0 && currentPage == 2 && main.isWiggleMode)
+			{
+				data.dragging = false;
+				GoToPage(2);
+			}
+		}
+	}
 
-    public void OnEndDrag(PointerEventData data)
-    {
-        float percentage = (data.pressPosition.x - data.position.x) / Screen.width;
-        if (Mathf.Abs(percentage) >= percentThreshold)
-        {
-            float newX = panelLocation.x;
-            if (percentage > 0 && currentPage < totalPages)
-            {
-                currentPage++;
-                newX -= Screen.width;
-            }
-            else if (percentage < 0 && currentPage > 1)
-            {
-                currentPage--;
-                newX += Screen.width;
-            }
+	public void OnEndDrag(PointerEventData data)
+	{
+		float percentage = (data.pressPosition.x - data.position.x) / Screen.width;
+		if (Mathf.Abs(percentage) >= percentThreshold)
+		{
+			float newX = panelLocation.x;
+			if (percentage > 0 && currentPage < totalPages)
+			{
+				currentPage++;
+				newX -= Screen.width;
+			}
+			else if (percentage < 0 && currentPage > 1)
+			{
+				currentPage--;
+				newX += Screen.width;
+			}
 
-            SmoothMove(newX);
-            panelLocation.x = newX;
-        }
-        else
-        {
-            SmoothMove(panelLocation.x);
-        }
+			SmoothMove(newX);
+			panelLocation.x = newX;
+		}
+		else
+		{
+			SmoothMove(panelLocation.x);
+		}
 
-        if (pageObjects.Length == 2)
-        {
-            GoToPage(2);
-        }
-    }
+		if (pageObjects.Length == 2)
+		{
+			GoToPage(2);
+		}
+	}
 
-    void SmoothMove(float endX)
-    {
-        LeanTween.moveX(gameObject, endX, 0.5f).setEase(LeanTweenType.easeOutQuint);
-    }
+	void SmoothMove(float endX)
+	{
+		LeanTween.moveX(gameObject, endX, 0.5f).setEase(LeanTweenType.easeOutQuint);
+	}
 
-    public void GoToPage(int pageNumber)
-    {
-        int targetPage = Mathf.Clamp(pageNumber, 1, totalPages);
-        float newX = panelLocation.x + (currentPage - targetPage) * Screen.width;
-        SmoothMove(newX);
-        panelLocation.x = newX;
-        currentPage = targetPage;
-    }
+	public void GoToPage(int pageNumber)
+	{
+		int targetPage = Mathf.Clamp(pageNumber, 1, totalPages);
+		float newX = panelLocation.x + (currentPage - targetPage) * Screen.width;
+		SmoothMove(newX);
+		panelLocation.x = newX;
+		currentPage = targetPage;
+	}
 
-    public void PlayZoom()
-    {
-        if (!main.isInApp)
-        {
-            pages[currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomIn();
-        }
-    }
+	public void PlayZoom()
+	{
+		if (!main.isInApp)
+		{
+			pages[currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomIn();
+		}
+	}
 
-    public void PlayZoomOut()
-    {
-        pages[currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomOut();
-    }
+	public void PlayZoomOut()
+	{
+		pages[currentPage - 1].gameObject.GetComponent<Page_Anim>().PageZoomOut();
+	}
 }
