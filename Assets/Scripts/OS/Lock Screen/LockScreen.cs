@@ -15,12 +15,14 @@ public class LockScreen : MonoBehaviour
 
 	[SerializeField] private TOSSP6 main;
 
-	[SerializeField] private GameObject batteryUI;
 	[SerializeField] private Image batteryBG;
 	[SerializeField] private Sprite[] batteryBGImages;
 
-	[SerializeField] private GameObject topGO, bottomGO, batteryUIGO, mediaControlGO, interactablesGO;
-	[SerializeField] public Toggle[] passcodeToggles;
+	[SerializeField] private GameObject topGO, bottomGO, batteryUI, mediaControlGO, interactablesGO;
+	[SerializeField] private Toggle[] passcodeToggles;
+	[SerializeField] private CanvasGroup batteryUICanvas;
+
+	int lastBatterySpriteIndex = -2;
 
 	private void Start()
 	{
@@ -35,23 +37,27 @@ public class LockScreen : MonoBehaviour
 		BatteryBG();
 	}
 
-	void BatteryBG()
+	private void BatteryBG()
 	{
-		if (main.isSystemCharging)
-		{
-			batteryUI.SetActive(true);
-
-			for (int i = 0; i < 16; i++)
-			{
-				if (SystemInfo.batteryLevel * 100 >= (i + 1) * 6.25)
-				{
-					batteryBG.sprite = batteryBGImages[i];
-				}
-			}
-		}
-		else
+		if (!main.isSystemCharging)
 		{
 			batteryUI.SetActive(false);
+			return;
+		}
+
+		if (!batteryUI.activeSelf)
+		{
+			batteryUI.SetActive(true);
+		}
+
+		float step = 6.25f;
+		float currentBatteryLevel = SystemInfo.batteryLevel * 100;
+		int batterySpriteIndex = Mathf.Clamp((int)(currentBatteryLevel / step), 0, batteryBGImages.Length - 1);
+
+		if (batterySpriteIndex != lastBatterySpriteIndex)
+		{
+			batteryBG.sprite = batteryBGImages[batterySpriteIndex];
+			lastBatterySpriteIndex = batterySpriteIndex;
 		}
 	}
 
@@ -106,13 +112,14 @@ public class LockScreen : MonoBehaviour
 			LeanTween.moveLocalY(bottomGO, -415, 0);
 		});
 
-		LeanTween.alphaCanvas(batteryUIGO.GetComponent<CanvasGroup>(), 0, 0.15f);
+		LeanTween.alphaCanvas(batteryUICanvas, 0, 0.25f);
+		batteryUICanvas.blocksRaycasts = false;
 	}
 
 	public void ResetLockScreen()
 	{
 		//anim.Play("Lock_Screen_Reset");
-		LeanTween.cancel(batteryUIGO);
+		LeanTween.cancel(batteryUI);
 		LeanTween.cancel(bottomGO);
 		LeanTween.cancel(interactablesGO);
 		LeanTween.cancel(mediaControlGO);
@@ -122,7 +129,8 @@ public class LockScreen : MonoBehaviour
 		LeanTween.moveLocalY(mediaControlGO, 0, 0);
 		LeanTween.moveLocalY(bottomGO, 0, 0);
 
-		LeanTween.alphaCanvas(batteryUIGO.GetComponent<CanvasGroup>(), 1f, 0);
+		LeanTween.alphaCanvas(batteryUICanvas, 1f, 0);
+		batteryUICanvas.blocksRaycasts = true;
 
 		LeanTween.moveLocalY(bottomGO, 0, 0);
 		LeanTween.moveLocalX(interactablesGO, 0, 0);

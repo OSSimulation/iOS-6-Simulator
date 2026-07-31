@@ -137,11 +137,12 @@ public class StatusBar : MonoBehaviour
 	{
 		var batteryStatus = SystemInfo.batteryStatus;
 
-		main.isSystemCharging = batteryStatus == BatteryStatus.Charging;
 		bool isSystemHolding = batteryStatus == BatteryStatus.NotCharging
 			|| batteryStatus == BatteryStatus.Full
 			|| batteryStatus == BatteryStatus.Unknown
 			|| SystemInfo.batteryLevel == -1f;
+
+		main.isSystemCharging = batteryStatus == BatteryStatus.Charging && !isSystemHolding;
 
 		batteryCharging.SetActive(main.isSystemCharging);
 		batteryNormal.SetActive(!main.isSystemCharging && !isSystemHolding);

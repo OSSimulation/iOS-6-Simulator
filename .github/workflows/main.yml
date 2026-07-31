@@ -4,24 +4,24 @@ name: Automatic Builds
     branches:
       - main
       - master
-    paths-ignore:
-      - '**.md'
-      - docs/**
+    paths:
+      - Assets/**
+      - Packages/**
+      - ProjectSettings/**
   pull_request:
     branches:
       - main
       - master
-    paths-ignore:
-      - '**.md'
-      - docs/**
+    paths:
+      - Assets/**
+      - Packages/**
+      - ProjectSettings/**
 jobs:
   build:
     name: 'Build for ${{ matrix.artifactName }}'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        unityVersion:
-          - 2021.3.45f2
         targetPlatform:
           - StandaloneWindows
           - StandaloneWindows64
@@ -56,8 +56,8 @@ jobs:
           UNITY_PASSWORD: '${{ secrets.UNITY_PASSWORD }}'
         with:
           targetPlatform: '${{ matrix.targetPlatform }}'
-          unityVersion: '${{ matrix.unityVersion }}'
-          buildName: iOS 6 Simulator
+          unityVersion: 2021.3.45f2
+          buildName: 'iOS6Simulator-${{ matrix.targetPlatform }}'
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:

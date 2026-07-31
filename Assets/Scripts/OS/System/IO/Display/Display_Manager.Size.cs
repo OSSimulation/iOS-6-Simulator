@@ -1,5 +1,4 @@
 using Microsoft.Win32;
-using OS6.Power;
 using System.Diagnostics;
 using UnityEngine;
 

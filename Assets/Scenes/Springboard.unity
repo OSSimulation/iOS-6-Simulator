@@ -4859,7 +4859,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   usePasscode: 0
   main: {fileID: 1668756391}
-  batteryUI: {fileID: 2028138289}
   batteryBG: {fileID: 639802586}
   batteryBGImages:
   - {fileID: 21300000, guid: 8eb58ec7a846968498babd82748b291b, type: 3}
@@ -4880,7 +4879,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: dd0dc011ebc295f4780b50342300ca2b, type: 3}
   topGO: {fileID: 914747792}
   bottomGO: {fileID: 1928265980}
-  batteryUIGO: {fileID: 2028138289}
+  batteryUI: {fileID: 2028138289}
   mediaControlGO: {fileID: 1812021438}
   interactablesGO: {fileID: 900298139}
   passcodeToggles:
@@ -4888,6 +4887,7 @@ MonoBehaviour:
   - {fileID: 1161424742}
   - {fileID: 302517518}
   - {fileID: 1835100387}
+  batteryUICanvas: {fileID: 2028138291}
 --- !u!1 &740163437
 GameObject:
   m_ObjectHideFlags: 0
